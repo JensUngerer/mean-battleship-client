@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'bs-game',
@@ -10,6 +10,9 @@ import { Component, OnInit } from '@angular/core';
   ]
 })
 export class GameComponent implements OnInit {
+  @Output()
+  public fieldSize = 5;
+
 
   constructor() { }
 

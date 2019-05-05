@@ -10,13 +10,16 @@ export class FieldComponent implements OnInit {
   public caption: string = 'TODO: Title of field';
 
   @Output()
-  public legendTiles: [] = [];
+  public legendTiles: string[] = [];
 
   @Output()
   public tiles: [][] = [];
 
   @Input()
   public isDomesticField: boolean;
+
+  @Input()
+  public fieldSize: number;
 
   @HostBinding('class.fieldContainer') private isFieldContainerClass = true;
   @HostBinding('class.domesticField') private isDomesticFieldClass = false;
@@ -27,6 +30,17 @@ export class FieldComponent implements OnInit {
   ngOnInit() {
     this.isDomesticFieldClass = this.isDomesticField;
     this.isAdversarialFieldClass = !this.isDomesticField;
+    this.initializeField();
+  }
+
+  private initializeField() {
+    const alphabet = ['A', 'B', 'C', 'D', 'E',
+    'F', 'G', 'H', 'I', 'J',
+    'K', 'L', 'M', 'N', 'O',
+    'P', 'Q', 'R', 'S', 'T',
+    'U', 'V', 'W', 'X', 'Y',
+    'Z'];
+    this.legendTiles = alphabet.splice(0, this.fieldSize);
   }
 
 }
