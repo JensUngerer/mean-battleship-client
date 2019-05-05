@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'asb-game-state',
+  selector: 'bs-game-state',
   templateUrl: './game-state.component.html',
   styleUrls: ['./game-state.component.css']
 })

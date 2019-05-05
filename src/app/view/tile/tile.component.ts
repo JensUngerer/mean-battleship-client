@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'asb-tile',
+  selector: 'bs-tile',
   templateUrl: './tile.component.html',
   styleUrls: ['./tile.component.css']
 })

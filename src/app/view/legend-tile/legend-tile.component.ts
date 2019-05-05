@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'asb-legend-tile',
+  selector: 'bs-legend-tile',
   templateUrl: './legend-tile.component.html',
   styleUrls: ['./legend-tile.component.css']
 })
