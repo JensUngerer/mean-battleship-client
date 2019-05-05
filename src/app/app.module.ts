@@ -1,3 +1,4 @@
+import { TileGeneratorService } from './logic/tileGenerator/tile-generator.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -26,7 +27,9 @@ import { TileComponent } from './view/tile/tile.component';
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    TileGeneratorService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
