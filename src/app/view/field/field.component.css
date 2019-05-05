@@ -1,0 +1,5 @@
+.row {
+    display: flex;
+    flex: 1 1 100%;
+    flex-direction: row;
+}

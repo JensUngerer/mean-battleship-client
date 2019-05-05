@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'bs-field',
@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./field.component.css']
 })
 export class FieldComponent implements OnInit {
-
+  @Output()
+  public caption: string = 'TODO: Title of field';
+  
   constructor() { }
 
   ngOnInit() {
