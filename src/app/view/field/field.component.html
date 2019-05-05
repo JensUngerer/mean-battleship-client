@@ -7,3 +7,11 @@
   <battleship-legend-tile [caption]="i+1"></battleship-legend-tile>
   <battleship-tile [gameState]="gameState" [tile]="tile" *ngFor="let tile of row; let j = index"></battleship-tile>
 </div> -->
+<div class="row">
+  <bs-legend-tile-corner></bs-legend-tile-corner>
+  <bs-legend-tile *ngFor="let legendTile of legendTiles"></bs-legend-tile>
+</div>
+<div class="row" *ngFor="let row of tiles; let i = index">
+  <bs-legend-tile>{{i+1}}</bs-legend-tile>
+  <bs-tile *ngFor="let tile of row; let j = index">{{j+1}}</bs-tile>
+</div>

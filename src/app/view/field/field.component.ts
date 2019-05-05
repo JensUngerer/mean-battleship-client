@@ -9,6 +9,12 @@ export class FieldComponent implements OnInit {
   @Output()
   public caption: string = 'TODO: Title of field';
   
+  @Output()
+  public legendTiles: [] = [];
+
+  @Output()
+  public tiles: [][] = [];
+
   constructor() { }
 
   ngOnInit() {
