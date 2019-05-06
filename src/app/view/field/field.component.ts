@@ -1,3 +1,4 @@
+import { Tile } from './../../logic/tile/tile';
 import { TileGeneratorService } from './../../logic/tileGenerator/tile-generator.service';
 import { Component, OnInit, Output, HostBinding, Input, SimpleChanges, OnChanges } from '@angular/core';
 
@@ -14,14 +15,19 @@ export class FieldComponent implements OnInit, OnChanges {
   @Output()
   public legendTiles: string[] = [];
 
-  @Output()
-  public tiles: [][] = [];
+  //@Output()
+  //public tiles: [][] = [];
 
   @Input()
   public isDomesticField: boolean;
 
+  //@Input()
+  //public fieldSize: number;
+
   @Input()
-  public fieldSize: number;
+  public tiles: Tile[][];
+
+  private fieldSize: number;
 
   @HostBinding('class.fieldContainer') private isFieldContainerClass = true;
   @HostBinding('class.domesticField') private isDomesticFieldClass = false;
@@ -31,12 +37,16 @@ export class FieldComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.fieldSize = this.tiles.length;
+
     this.isDomesticFieldClass = this.isDomesticField;
     this.isAdversarialFieldClass = !this.isDomesticField;
+
+    this.initializeField();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.initializeField();
+    //this.initializeField();
   }
 
   private initializeField() {

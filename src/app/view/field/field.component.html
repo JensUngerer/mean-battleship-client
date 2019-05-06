@@ -12,6 +12,6 @@
   <bs-legend-tile *ngFor="let legendTileCaption of legendTiles" [caption]="legendTileCaption"></bs-legend-tile>
 </div>
 <div class="row" *ngFor="let row of tiles; let i = index">
-  <bs-legend-tile>{{i+1}}</bs-legend-tile>
+  <bs-legend-tile [caption]="i+1"></bs-legend-tile>
   <bs-tile *ngFor="let tile of row; let j = index">{{j+1}}</bs-tile>
 </div>
