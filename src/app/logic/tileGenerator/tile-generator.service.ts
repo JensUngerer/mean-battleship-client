@@ -24,7 +24,7 @@ export class TileGeneratorService {
     for (let i = 0; i < fieldSize; i++) {
       tiles[i] = [];
       for (let j = 0; j < fieldSize; j++) {
-        tiles[i][j] = new Tile(isDomesticTile);
+        tiles[i][j] = new Tile(isDomesticTile, i + ' ' + j);
       }
     }
     return tiles;

@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Tile } from 'src/app/logic/tile/tile';
 
 @Component({
   selector: 'bs-tile',
@@ -7,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class TileComponent implements OnInit {
   @Input()
-  public text: string;
+  public tile: Tile;
 
   constructor() { }
 
