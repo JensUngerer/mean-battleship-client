@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Tile } from '../tile/tile';
+import { TileState } from './../../../../../common/src/tileState/tileState.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +21,13 @@ export class TileGeneratorService {
   }
 
   public generateTiles(fieldSize: number, isDomesticTile: boolean): Tile[][] {
+    const isTileDisabled: boolean = false;
+
     const tiles: Tile[][] = [];
     for (let i = 0; i < fieldSize; i++) {
       tiles[i] = [];
       for (let j = 0; j < fieldSize; j++) {
-        tiles[i][j] = new Tile(isDomesticTile, i + ' ' + j);
+        tiles[i][j] = new Tile(isDomesticTile, i, j, isTileDisabled, TileState.Water);
       }
     }
     return tiles;
