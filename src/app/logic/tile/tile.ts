@@ -8,9 +8,9 @@ export class Tile {
   private internalTileState: TileState;
 
   constructor(private isDomesticTile: boolean,
-    private xCoordinate: number,
-    private yCoordinate: number,
-    private isDisabled: boolean,
+    public xCoordinate: number,
+    public yCoordinate: number,
+    public isDisabled: boolean,
     tileState: TileState) {
     this.tileState = tileState;
   }

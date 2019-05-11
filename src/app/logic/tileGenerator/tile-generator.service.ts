@@ -21,7 +21,7 @@ export class TileGeneratorService {
   }
 
   public generateTiles(fieldSize: number, isDomesticTile: boolean): Tile[][] {
-    const isTileDisabled: boolean = false;
+    const isTileDisabled: boolean = isDomesticTile;
 
     const tiles: Tile[][] = [];
     for (let i = 0; i < fieldSize; i++) {

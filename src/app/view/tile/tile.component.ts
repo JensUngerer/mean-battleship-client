@@ -18,4 +18,11 @@ export class TileComponent implements OnInit {
   ngOnInit() {
   }
 
+  public fire($event: any) {
+    console.log('tile with coordinates:' +
+      (this.tile.xCoordinate + 1) +
+      ' ' +
+      (this.tile.yCoordinate + 1) +
+      ' has just been fired');
+  }
 }
