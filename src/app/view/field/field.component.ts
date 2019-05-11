@@ -9,8 +9,8 @@ import { Component, OnInit, Output, HostBinding, Input, SimpleChanges, OnChanges
 })
 export class FieldComponent implements OnInit, OnChanges {
 
-  @Output()
-  public caption: string = 'TODO: Title of field';
+  @Input()
+  public caption: string;
 
   @Output()
   public legendTiles: string[] = [];
