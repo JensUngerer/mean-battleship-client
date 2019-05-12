@@ -1,7 +1,7 @@
 import { TileGeneratorService } from './../../logic/tileGenerator/tile-generator.service';
 import { Tile } from './../../logic/tile/tile';
 import { Component, OnInit, Output } from '@angular/core';
-import { ITileCoordinates } from '../../../../../common/src/tileCoordinates/iTileCoordinates';
+import { Game } from 'src/app/logic/game/game';
 
 @Component({
   selector: 'bs-game',
@@ -22,13 +22,13 @@ export class GameComponent implements OnInit {
   @Output()
   public adversarialTiles: Tile[][];
 
-  public onFired: (coordinates: ITileCoordinates) => void = (coordinates: ITileCoordinates) => {
-    console.log(coordinates);
-  };
+  @Output()
+  public game: Game;
 
   constructor(private tileGeneratorService: TileGeneratorService) {
-    this.domesticTiles = this.tileGeneratorService.generateTiles(this.fieldSize, true);
-    this.adversarialTiles = this.tileGeneratorService.generateTiles(this.fieldSize, false);
+    const domesticTiles = this.tileGeneratorService.generateTiles(this.fieldSize, true);
+    const adversarialTiles = this.tileGeneratorService.generateTiles(this.fieldSize, false);
+    this.game = new Game(domesticTiles, adversarialTiles);
   }
 
   ngOnInit() {
