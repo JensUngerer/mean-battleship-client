@@ -1,6 +1,7 @@
 import { Tile } from './../../logic/tile/tile';
 import { TileGeneratorService } from './../../logic/tileGenerator/tile-generator.service';
 import { Component, OnInit, Output, HostBinding, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { ITileCoordinates } from '../../../../../common/src/tileCoordinates/iTileCoordinates';
 
 @Component({
   selector: 'bs-field',
@@ -47,6 +48,10 @@ export class FieldComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     //this.initializeField();
+  }
+
+  public firedOnTile(coordinates: ITileCoordinates) {
+    console.log('received tile-coordinates:' + coordinates.rowIndex + ' ' + coordinates.columnIndex);
   }
 
   private initializeField() {

@@ -13,5 +13,5 @@
 </div>
 <div class="row" *ngFor="let row of tiles; let i = index">
   <bs-legend-tile [caption]="i+1"></bs-legend-tile>
-  <bs-tile *ngFor="let tile of row; let j = index" [tile]="tile"></bs-tile>
+  <bs-tile *ngFor="let tile of row; let j = index" [tile]="tile" (fired)="firedOnTile($event)"></bs-tile>
 </div>
