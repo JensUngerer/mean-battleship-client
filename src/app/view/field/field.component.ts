@@ -1,3 +1,4 @@
+import { EventEmitter } from '@angular/core';
 import { Tile } from './../../logic/tile/tile';
 import { TileGeneratorService } from './../../logic/tileGenerator/tile-generator.service';
 import { Component, OnInit, Output, HostBinding, Input, SimpleChanges, OnChanges } from '@angular/core';
@@ -28,6 +29,9 @@ export class FieldComponent implements OnInit, OnChanges {
   @Input()
   public tiles: Tile[][];
 
+  @Output()
+  public firedOn: EventEmitter<ITileCoordinates> = new EventEmitter<ITileCoordinates>();
+
   private fieldSize: number;
 
   @HostBinding('class.fieldContainer') private isFieldContainerClass = true;
@@ -52,6 +56,8 @@ export class FieldComponent implements OnInit, OnChanges {
 
   public firedOnTile(coordinates: ITileCoordinates) {
     console.log('received tile-coordinates:' + coordinates.rowIndex + ' ' + coordinates.columnIndex);
+
+    this.firedOn.emit(coordinates);
   }
 
   private initializeField() {
