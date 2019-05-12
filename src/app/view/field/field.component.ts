@@ -30,7 +30,7 @@ export class FieldComponent implements OnInit, OnChanges {
   public tiles: Tile[][];
 
   @Output()
-  public firedOn: EventEmitter<ITileCoordinates> = new EventEmitter<ITileCoordinates>();
+  public fired: EventEmitter<ITileCoordinates> = new EventEmitter<ITileCoordinates>();
 
   private fieldSize: number;
 
@@ -54,10 +54,10 @@ export class FieldComponent implements OnInit, OnChanges {
     //this.initializeField();
   }
 
-  public firedOnTile(coordinates: ITileCoordinates) {
+  public onFired(coordinates: ITileCoordinates) {
     console.log('received tile-coordinates:' + coordinates.rowIndex + ' ' + coordinates.columnIndex);
 
-    this.firedOn.emit(coordinates);
+    this.fired.emit(coordinates);
   }
 
   private initializeField() {

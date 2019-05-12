@@ -2,4 +2,4 @@
 <bs-field [caption]="'YOUR FIELD'" [tiles]="domesticTiles" [isDomesticField]="true"></bs-field>
 <br>
 <!-- adversarial field-->
-<bs-field (firedOn)="firedOnField($event)" [caption]="'ENEMY FIELD'" [tiles]="adversarialTiles" [isDomesticField]="false"></bs-field>
+<bs-field (fired)="onFired($event)" [caption]="'ENEMY FIELD'" [tiles]="adversarialTiles" [isDomesticField]="false"></bs-field>

@@ -22,7 +22,7 @@ export class GameComponent implements OnInit {
   @Output()
   public adversarialTiles: Tile[][];
 
-  public firedOnField: (coordinates: ITileCoordinates) => void = (coordinates: ITileCoordinates) => {
+  public onFired: (coordinates: ITileCoordinates) => void = (coordinates: ITileCoordinates) => {
     console.log(coordinates);
   };
 
