@@ -1,17 +1,22 @@
 import { TileState } from '../../../../../common/src/tileState/tileState.enum';
+import { Ship } from '../ship/ship';
 
 export class Tile {
 
   public color: string;
   public text: string;
 
+  public ship: Ship;
+  public isStartTile = false;
+  public isEndTile = false;
+
   private internalTileState: TileState;
 
   constructor(private isDomesticTile: boolean,
-    public xCoordinate: number,
-    public yCoordinate: number,
-    public isDisabled: boolean,
-    tileState: TileState) {
+              public xCoordinate: number,
+              public yCoordinate: number,
+              public isDisabled: boolean,
+              tileState: TileState) {
     this.tileState = tileState;
   }
 

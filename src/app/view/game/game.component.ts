@@ -2,6 +2,7 @@ import { TileGeneratorService } from './../../logic/tileGenerator/tile-generator
 import { Tile } from './../../logic/tile/tile';
 import { Component, OnInit, Output } from '@angular/core';
 import { Game } from 'src/app/logic/game/game';
+import { ShipGeneratorService } from 'src/app/logic/ship-generator/ship-generator.service';
 
 @Component({
   selector: 'bs-game',
@@ -25,9 +26,12 @@ export class GameComponent implements OnInit {
   @Output()
   public game: Game;
 
-  constructor(private tileGeneratorService: TileGeneratorService) {
+  constructor(private tileGeneratorService: TileGeneratorService,
+              private shipGeneratorService: ShipGeneratorService) {
     const domesticTiles = this.tileGeneratorService.generateTiles(this.fieldSize, true);
     const adversarialTiles = this.tileGeneratorService.generateTiles(this.fieldSize, false);
+    const shipSizes: number[] = [2, 2, 3];
+    this.shipGeneratorService.generateShips(shipSizes, domesticTiles);
     this.game = new Game(domesticTiles, adversarialTiles);
   }
 
