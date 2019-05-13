@@ -20,6 +20,10 @@ export class Tile {
     this.tileState = tileState;
   }
 
+  public get tileState(): TileState {
+    return this.internalTileState;
+  }
+
   public set tileState(state: TileState) {
     this.internalTileState = state;
     switch (this.internalTileState) {
