@@ -24,10 +24,14 @@ export class TileComponent implements OnInit {
   }
 
   public fire($event: any) {
-    this.fired.emit({
-      rowIndex: this.tile.xCoordinate,
-      columnIndex: this.tile.yCoordinate
-    });
+    if (!this.tile.isDisabled) {
+      this.tile.isDisabled = true;
+      this.fired.emit({
+        rowIndex: this.tile.xCoordinate,
+        columnIndex: this.tile.yCoordinate
+      });
+    }
+    // DEBUGGING
     console.log('tile with coordinates:' +
       (this.tile.xCoordinate + 1) +
       ' ' +
