@@ -1,3 +1,5 @@
+import { SocketSendService } from './logic/communication/sendService/socket-send.service';
+import { SocketReceiveService } from './logic/communication/receiveService/socket-receive.service';
 import { TileGeneratorService } from './logic/tileGenerator/tile-generator.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -11,6 +13,7 @@ import { GameStateComponent } from './view/game-state/game-state.component';
 import { LegendTileComponent } from './view/legend-tile/legend-tile.component';
 import { LegendTileCornerComponent } from './view/legend-tile-corner/legend-tile-corner.component';
 import { TileComponent } from './view/tile/tile.component';
+import { SocketService } from './logic/communication/socketService/socket.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,10 @@ import { TileComponent } from './view/tile/tile.component';
     AppRoutingModule
   ],
   providers: [
-    TileGeneratorService
+    TileGeneratorService,
+    SocketService,
+    SocketReceiveService,
+    SocketSendService
   ],
   bootstrap: [AppComponent]
 })
