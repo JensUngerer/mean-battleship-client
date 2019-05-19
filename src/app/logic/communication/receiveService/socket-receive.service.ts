@@ -11,6 +11,11 @@ export class SocketReceiveService {
     this.init();
   }
 
+  public static debugPrint(msg: any) {
+    console.log('userId:' + SocketService.userId);
+    console.log(JSON.stringify(msg, null, 4));
+  }
+
   private init() {
     this.socketService
       .registerReceive(SocketIoReceiveTypes.BeginningUser)
@@ -36,26 +41,22 @@ export class SocketReceiveService {
   }
 
   private beginningUser(msg: any) {
-    this.debugPrint(msg);
+    SocketReceiveService.debugPrint(msg);
   }
 
   private coordinates(msg: any) {
-    this.debugPrint(msg);
+    SocketReceiveService.debugPrint(msg);
   }
 
   private tileState(msg: any) {
-    this.debugPrint(msg);
+    SocketReceiveService.debugPrint(msg);
   }
 
   private remainingTileState(msg: any) {
-    this.debugPrint(msg);
+    SocketReceiveService.debugPrint(msg);
   }
 
   private gameWon(msg: any) {
-    this.debugPrint(msg);
-  }
-
-  private debugPrint(msg: any) {
-    console.log(JSON.stringify(msg, null, 4));
+    SocketReceiveService.debugPrint(msg);
   }
 }
