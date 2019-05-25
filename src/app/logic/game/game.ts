@@ -11,7 +11,7 @@ export class Game {
               private socketSendService: SocketSendService) {
               }
 
-  public onFired: (coordinates: ITileCoordinates) => void = (coordinates: ITileCoordinates) => {
+  public onFired(coordinates: ITileCoordinates) {
     // DEBUGGING:
     // console.log(coordinates);
 
