@@ -5,13 +5,14 @@ import { ICoordinatesMessage } from './../../../../../../common/src/communicatio
 import { ITileStateMessage } from './../../../../../../common/src/communication/message/iTileStateMessage';
 import { SocketIoSendTypes } from '../../../../../../common/src/communication/socketIoSendTypes';
 import { IMessage } from '../../../../../../common/src/communication/message/iMessage';
+import { ITileCoordinates } from '../../../../../../common/src/tileCoordinates/iTileCoordinates';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketSendService {
-  private coordinates$: Subject<any> = new Subject<any>();
+  private coordinates$: Subject<ICoordinatesMessage> = new Subject<ICoordinatesMessage>();
   private tileState$: Subject<any> = new Subject<any>();
   private remainingTileState$: Subject<any> = new Subject<any>();
   private gameWon$: Subject<any> = new Subject<any>();
@@ -21,19 +22,21 @@ export class SocketSendService {
   }
 
   private init() {
-    this.socketService.registerSend(SocketIoSendTypes.Coordinates, this.coordinates$);
+    this.socketService.registerSend<ICoordinatesMessage>(SocketIoSendTypes.Coordinates, this.coordinates$);
     this.socketService.registerSend(SocketIoSendTypes.TileState, this.tileState$);
     this.socketService.registerSend(SocketIoSendTypes.RemainingTileState, this.remainingTileState$);
     this.socketService.registerSend(SocketIoSendTypes.GameWon, this.gameWon$);
   }
 
-  private coordinates(msg: ICoordinatesMessage) {
-    // const msg: ICoordinatesMessage = {
-    //   coordinates: {
-    //     rowIndex: 0
-    //     columnIndex: 0
-    //   }
-    // };
+  public coordinates(coordinates: ITileCoordinates) {
+    const msg: ICoordinatesMessage = {
+      type: SocketIoSendTypes.Coordinates,
+      sourceUserId: SocketService.userId,
+      coordinates: {
+        rowIndex: coordinates.rowIndex,
+        columnIndex: coordinates.columnIndex
+      }
+    };
     this.coordinates$.next(msg);
   }
 

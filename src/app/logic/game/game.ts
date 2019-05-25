@@ -1,23 +1,22 @@
+import { SocketSendService } from './../communication/sendService/socket-send.service';
 import { Tile } from '../tile/tile';
 import { ITileCoordinates } from '../../../../../common/src/tileCoordinates/iTileCoordinates';
 import { TileState } from '../../../../../common/src/tileState/tileState.enum';
+import { Inject } from '@angular/core';
 
 export class Game {
-  public domesticTiles: Tile[][];
-  public adversarialTiles: Tile[][];
 
-  constructor(domesticTiles: Tile[][],
-              adversarialTiles: Tile[][]) {
-    this.domesticTiles = domesticTiles;
-    this.adversarialTiles = adversarialTiles;
-  }
+  constructor(public domesticTiles: Tile[][],
+              public adversarialTiles: Tile[][],
+              private socketSendService: SocketSendService) {
+              }
 
   public onFired: (coordinates: ITileCoordinates) => void = (coordinates: ITileCoordinates) => {
     // DEBUGGING:
     // console.log(coordinates);
 
     // only for DEBUGGING purposes
-    this.receiveCoordinates(coordinates);
+    // this.receiveCoordinates(coordinates);
 
 
     // this.setDomesticTileState(coordinates);
@@ -29,7 +28,8 @@ export class Game {
 
   private sendCoordinates(coordinates: ITileCoordinates){
     // DEBUGGING:
-    console.log(coordinates);
+    // console.log(coordinates);
+    this.socketSendService.coordinates(coordinates);
   }
 
   public receiveCoordinates(coordinates: ITileCoordinates) {

@@ -32,7 +32,7 @@ export class SocketService {
     });
   }
 
-  public registerSend(sendId: string, sendData: Subject<any>) {
+  public registerSend<T extends IMessage>(sendId: string, sendData: Subject<T>) {
     sendData.subscribe((data: IMessage) => {
       this.socket.emit(sendId, data);
     });

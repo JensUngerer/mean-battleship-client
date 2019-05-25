@@ -1,3 +1,4 @@
+import { SocketSendService } from './../../logic/communication/sendService/socket-send.service';
 import { TileGeneratorService } from './../../logic/tileGenerator/tile-generator.service';
 import { Tile } from './../../logic/tile/tile';
 import { Component, OnInit, Output } from '@angular/core';
@@ -27,12 +28,13 @@ export class GameComponent implements OnInit {
   public game: Game;
 
   constructor(private tileGeneratorService: TileGeneratorService,
-              private shipGeneratorService: ShipGeneratorService) {
+              private shipGeneratorService: ShipGeneratorService,
+              private socketSendService: SocketSendService) {
     const domesticTiles = this.tileGeneratorService.generateTiles(this.fieldSize, true);
     const adversarialTiles = this.tileGeneratorService.generateTiles(this.fieldSize, false);
     const shipSizes: number[] = [1, 2];
     this.shipGeneratorService.generateShips(shipSizes, domesticTiles);
-    this.game = new Game(domesticTiles, adversarialTiles);
+    this.game = new Game(domesticTiles, adversarialTiles, this.socketSendService);
   }
 
   ngOnInit() {
