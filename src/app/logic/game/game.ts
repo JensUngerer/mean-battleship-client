@@ -26,6 +26,39 @@ export class Game {
     // this.setAdversarialTileState()
   }
 
+  public setDomesticState(coordinates: ITileCoordinates) {
+    // this.tileActions.receiveCoordinates(coordinates);
+
+    // DEBUGGING:
+    // console.log('Game-class');
+    // console.log(coordinates);
+
+    // 1)
+    const domesticTile = this.domesticTiles[coordinates.rowIndex][coordinates.columnIndex];
+    const domesticTileState = domesticTile.tileState;
+    let newDomesticTileState;
+    if (domesticTileState === TileState.Water) {
+      newDomesticTileState = TileState.WaterFired;
+    }
+    if (domesticTileState === TileState.Ship) {
+      newDomesticTileState = TileState.ShipFired;
+    }
+    if (domesticTileState === TileState.ShipFired) {
+      newDomesticTileState = TileState.ShipSunken;
+    }
+    domesticTile.tileState = newDomesticTileState;
+
+    // 2)
+    this.socketSendService.tileState({
+      rowIndex: coordinates.rowIndex,
+      columnIndex: coordinates.columnIndex,
+      isEndTile: false,
+      isHorizontal: false,
+      isStartTile: false,
+      tileState: newDomesticTileState
+    });
+  }
+
   private sendCoordinates(coordinates: ITileCoordinates){
     // DEBUGGING:
     // console.log(coordinates);

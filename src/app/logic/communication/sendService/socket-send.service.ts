@@ -6,7 +6,7 @@ import { ITileStateMessage } from './../../../../../../common/src/communication/
 import { SocketIoSendTypes } from '../../../../../../common/src/communication/socketIoSendTypes';
 import { IMessage } from '../../../../../../common/src/communication/message/iMessage';
 import { ITileCoordinates } from '../../../../../../common/src/tileCoordinates/iTileCoordinates';
-
+import { IDomesticTileState } from './../../../../../../common/src/iDomesticTileState/iDomesticTileState';
 
 @Injectable({
   providedIn: 'root'
@@ -40,19 +40,19 @@ export class SocketSendService {
     this.coordinates$.next(msg);
   }
 
-  private tileState(msg: ITileStateMessage) {
-    // const msg: ITileStateMessage = {
-    //   type: action.type,
-    //   sourceUserId: CommunicationSocketService.userId,
-    //   coordinates: {
-    //     rowIndex: action.payload.rowIndex,
-    //     columnIndex: action.payload.columnIndex
-    //   },
-    //   tileState: action.payload.tile.tileState,
-    //   isStartTile: action.payload.tile.isStartTile,
-    //   isEndTile: action.payload.tile.isEndTile,
-    //   isHorizontal: action.payload.isHorizontal
-    // };
+  public tileState(newDomesticTileState: IDomesticTileState) {
+    const msg: ITileStateMessage = {
+      type: SocketIoSendTypes.TileState,
+      sourceUserId: SocketService.userId,
+      coordinates: {
+        rowIndex: newDomesticTileState.rowIndex,
+        columnIndex: newDomesticTileState.columnIndex
+      },
+      tileState: newDomesticTileState.tileState,
+      isStartTile: newDomesticTileState.isStartTile,
+      isEndTile: newDomesticTileState.isEndTile,
+      isHorizontal: newDomesticTileState.isHorizontal
+    };
     this.tileState$.next(msg);
   }
 

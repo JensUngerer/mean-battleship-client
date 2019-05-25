@@ -1,11 +1,17 @@
+import { Game } from 'src/app/logic/game/game';
 import { Injectable, Inject } from '@angular/core';
 import { SocketService } from '../socketService/socket.service';
 import { SocketIoReceiveTypes } from '../../../../../../common/src/communication/socketIoReceiveTypes';
+import { IMessage } from '../../../../../../common/src/communication/message/iMessage';
+import { ITileCoordinates } from '../../../../../../common/src/tileCoordinates/iTileCoordinates';
+import { ICoordinatesMessage } from '../../../../../../common/src/communication/message/iCoordinatesMessage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketReceiveService {
+
+  private static internalGame: Game;
 
   constructor(@Inject(SocketService) private socketService: SocketService) {
     this.init();
@@ -14,6 +20,10 @@ export class SocketReceiveService {
   public static debugPrint(msg: any) {
     console.log('userId:' + SocketService.userId);
     console.log(JSON.stringify(msg, null, 4));
+  }
+
+  public set game(game: Game) {
+    SocketReceiveService.internalGame = game;
   }
 
   private init() {
@@ -40,12 +50,19 @@ export class SocketReceiveService {
       .subscribe(this.gameWon);
   }
 
-  private beginningUser(msg: any) {
+  private beginningUser(msg: IMessage) {
     SocketReceiveService.debugPrint(msg);
   }
 
-  private coordinates(msg: any) {
+  private coordinates(msg: ICoordinatesMessage) {
     SocketReceiveService.debugPrint(msg);
+
+    const coordinates: ITileCoordinates = {
+      rowIndex: msg.coordinates.rowIndex,
+      columnIndex: msg.coordinates.columnIndex
+    };
+
+    SocketReceiveService.internalGame.setDomesticState(coordinates);
   }
 
   private tileState(msg: any) {
