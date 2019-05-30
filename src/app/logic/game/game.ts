@@ -52,7 +52,7 @@ export class Game {
     this.socketSendService.tileState({
       rowIndex: coordinates.rowIndex,
       columnIndex: coordinates.columnIndex,
-      isEndTile: false,
+      isEndTile: false, // TODO: these flags are used for visualization only? -> implement!
       isHorizontal: false,
       isStartTile: false,
       tileState: newDomesticTileState
