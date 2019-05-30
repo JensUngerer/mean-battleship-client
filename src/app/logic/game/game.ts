@@ -70,7 +70,7 @@ export class Game {
   }
 
 
-  public setDomesticTileState(coordinates: ITileCoordinates) {
+  private setDomesticTileState(coordinates: ITileCoordinates) {
     const domesticTile = this.domesticTiles[coordinates.rowIndex][coordinates.columnIndex];
     const domesticTileState = domesticTile.tileState;
     let newDomesticTileState;
@@ -84,6 +84,20 @@ export class Game {
       newDomesticTileState = TileState.ShipSunken;
     }
     domesticTile.tileState = newDomesticTileState;
+  }
+
+  public receiveTileState(coordinates: ITileCoordinates, tileState: TileState) {
+    const adversarialTile: Tile = this.adversarialTiles[coordinates.rowIndex][coordinates.columnIndex];
+
+    // TODO: FIXME: implement
+    // adversarialTile.isStartTile = false;
+    // adversarialTile.isEndTile = false;
+    // adversarialTile.isHorizontal = false;
+
+    // DEBUGGING:
+    console.log('receiving (adversarial) tile state:' + JSON.stringify(coordinates, null, 4) + ':' + tileState);
+
+    adversarialTile.tileState = tileState;
   }
 
 }

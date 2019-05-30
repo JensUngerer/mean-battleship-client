@@ -5,6 +5,7 @@ import { SocketIoReceiveTypes } from '../../../../../../common/src/communication
 import { IMessage } from '../../../../../../common/src/communication/message/iMessage';
 import { ITileCoordinates } from '../../../../../../common/src/tileCoordinates/iTileCoordinates';
 import { ICoordinatesMessage } from '../../../../../../common/src/communication/message/iCoordinatesMessage';
+import { ITileStateMessage } from '../../../../../../common/src/communication/message/iTileStateMessage';
 
 @Injectable({
   providedIn: 'root'
@@ -65,8 +66,16 @@ export class SocketReceiveService {
     SocketReceiveService.internalGame.setDomesticState(coordinates);
   }
 
-  private tileState(msg: any) {
-    SocketReceiveService.debugPrint(msg);
+  private tileState(msg: ITileStateMessage) {
+    // DEBUGGING:
+    // SocketReceiveService.debugPrint(msg);
+
+    const coordinates: ITileCoordinates =  {
+      rowIndex: msg.coordinates.rowIndex,
+      columnIndex: msg.coordinates.columnIndex
+    };
+    SocketReceiveService.internalGame.receiveTileState(coordinates, msg.tileState);
+
   }
 
   private remainingTileState(msg: any) {
