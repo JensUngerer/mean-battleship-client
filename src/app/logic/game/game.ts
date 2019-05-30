@@ -67,8 +67,12 @@ export class Game {
 
   public receiveCoordinates(coordinates: ITileCoordinates) {
     this.setDomesticTileState(coordinates);
+    this.sinkShipTiles(coordinates);
   }
 
+  private sinkShipTiles(coordinates: ITileCoordinates) {
+    // TODO: sink all ship tiles iff the last ship tile of a ship changes from fired to sunken
+  }
 
   private setDomesticTileState(coordinates: ITileCoordinates) {
     const domesticTile = this.domesticTiles[coordinates.rowIndex][coordinates.columnIndex];
