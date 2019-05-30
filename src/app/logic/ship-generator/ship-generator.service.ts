@@ -8,14 +8,18 @@ import { TilesHelperService } from '../tiles-helper/tiles-helper.service';
   providedIn: 'root'
 })
 export class ShipGeneratorService {
-  private ships: Ship[];
+  private internalShips: Ship[];
   private tiles: Tile[][];
   private playingFieldSize: number;
 
   constructor() { }
 
+  public get ships(): Ship[] {
+    return this.internalShips;
+  }
+
   public generateShips(shipSizes: Array<number>, tiles: Tile[][]) {
-    this.ships = [];
+    this.internalShips = [];
     this.tiles = tiles;
     this.playingFieldSize = tiles.length;
     this.generateInitialShips(shipSizes);
@@ -28,7 +32,7 @@ export class ShipGeneratorService {
       const rowIndex = this.generateRandomIndex(this.playingFieldSize);
       const columnIndex = this.generateRandomIndex(this.playingFieldSize);
       const horizontal = this.generateRandomOrientation();
-      this.ships.push(new Ship(horizontal,
+      this.internalShips.push(new Ship(horizontal,
         rowIndex, columnIndex, shipIndex, shipSizes[shipIndex]));
     }
   }
@@ -44,8 +48,8 @@ export class ShipGeneratorService {
   private placeShips() {
     const MAX_NUMBER_OF_RETRIES = 1e6;
     let ctr = 0;
-    for (let shipIndex = 0; shipIndex < this.ships.length; shipIndex++) {
-      const ship = this.ships[shipIndex];
+    for (let shipIndex = 0; shipIndex < this.internalShips.length; shipIndex++) {
+      const ship = this.internalShips[shipIndex];
       let isValid = true;
       do {
         isValid = this.isPlacedShipValid(ship);

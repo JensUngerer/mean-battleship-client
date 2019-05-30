@@ -2,14 +2,16 @@ import { SocketSendService } from './../communication/sendService/socket-send.se
 import { Tile } from '../tile/tile';
 import { ITileCoordinates } from '../../../../../common/src/tileCoordinates/iTileCoordinates';
 import { TileState } from '../../../../../common/src/tileState/tileState.enum';
-import { Inject } from '@angular/core';
+import { TilesHelperService } from '../tiles-helper/tiles-helper.service';
+import { Ship } from '../ship/ship';
 
 export class Game {
 
   constructor(public domesticTiles: Tile[][],
               public adversarialTiles: Tile[][],
-              private socketSendService: SocketSendService) {
-              }
+              private socketSendService: SocketSendService,
+              private ships: Ship[]) {
+  }
 
   public onFired(coordinates: ITileCoordinates) {
     // DEBUGGING:
@@ -26,7 +28,7 @@ export class Game {
     // this.setAdversarialTileState()
   }
 
-  public setDomesticState(coordinates: ITileCoordinates) {
+  private setDomesticState(coordinates: ITileCoordinates) {
     // this.tileActions.receiveCoordinates(coordinates);
 
     // DEBUGGING:
@@ -71,7 +73,33 @@ export class Game {
   }
 
   private sinkShipTiles(coordinates: ITileCoordinates) {
-    // TODO: sink all ship tiles iff the last ship tile of a ship changes from fired to sunken
+    const shipIndex: number = TilesHelperService
+                              .isShipSunken(coordinates.rowIndex,
+                              coordinates.columnIndex,
+                              this.domesticTiles,
+                              this.ships);
+    // let newDomesticTileState: TileState = null;
+    if (shipIndex !== -1) {
+      const ship: Ship = this.ships[shipIndex];
+      ship.isSunken = true;
+
+      const firstRowIndex = ship.rowIndex;
+      const firstColumnIndex = ship.columnIndex;
+
+      for (let i = 0; i < ship.size; i++) {
+        if (ship.horizontal){
+          this.setDomesticState({
+            rowIndex: firstRowIndex,
+            columnIndex: firstColumnIndex + i
+          })
+        } else {
+          this.setDomesticState({
+            rowIndex: firstRowIndex + i,
+            columnIndex: firstColumnIndex
+          });
+        }
+      }
+    }
   }
 
   private setDomesticTileState(coordinates: ITileCoordinates) {

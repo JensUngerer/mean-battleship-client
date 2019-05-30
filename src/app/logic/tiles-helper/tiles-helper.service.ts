@@ -8,45 +8,45 @@ import { TileState } from '../../../../../common/src/tileState/tileState.enum';
 })
 export class TilesHelperService {
 
-  // public static searchCorrespondingShip(rowIndex: number, columnIndex: number, ships: Ship[]): Ship {
-  //   let foundShip: Ship = null;
-  //   ships.forEach((ship) => {
-  //     if (ship.comprises(rowIndex, columnIndex)) {
-  //       foundShip = ship;
-  //     }
-  //   });
-  //   return foundShip;
-  // }
+  public static searchCorrespondingShip(rowIndex: number, columnIndex: number, ships: Ship[]): Ship {
+    let foundShip: Ship = null;
+    ships.forEach((ship) => {
+      if (ship.comprises(rowIndex, columnIndex)) {
+        foundShip = ship;
+      }
+    });
+    return foundShip;
+  }
 
-  // public static isShipSunken(rowIndex: number, columnIndex: number, domesticTiles: Tile[][], ships: Ship[]) {
-  //   let isShipSunken = true;
-  //   const ship = TilesHelperService.searchCorrespondingShip(rowIndex, columnIndex, ships);
-  //   if (ship !== null) {
-  //     const firstRowIndex = ship.rowIndex;
-  //     const firstColumnIndex = ship.columnIndex;
-  //     for (let i = 0; i < ship.size; i++) {
-  //       let tileState = domesticTiles[firstRowIndex][firstColumnIndex + i].tileState;
-  //       if (ship.horizontal) {
-  //         if (tileState === TileState.Ship) {
-  //           isShipSunken = false;
-  //           break;
-  //         }
-  //       } else {
-  //         tileState = domesticTiles[firstRowIndex + i][firstColumnIndex].tileState;
-  //         if (tileState === TileState.Ship) {
-  //           isShipSunken = false;
-  //           break;
-  //         }
-  //       }
-  //     }
-  //     if (isShipSunken) {
-  //       return ship.shipIndex;
-  //     } else {
-  //       return -1;
-  //     }
-  //   }
-  //   return -1;
-  // }
+  public static isShipSunken(rowIndex: number, columnIndex: number, domesticTiles: Tile[][], ships: Ship[]) {
+    let isShipSunken = true;
+    const ship = TilesHelperService.searchCorrespondingShip(rowIndex, columnIndex, ships);
+    if (ship !== null) {
+      const firstRowIndex = ship.rowIndex;
+      const firstColumnIndex = ship.columnIndex;
+      for (let i = 0; i < ship.size; i++) {
+        let tileState = domesticTiles[firstRowIndex][firstColumnIndex + i].tileState;
+        if (ship.horizontal) {
+          if (tileState === TileState.Ship) {
+            isShipSunken = false;
+            break;
+          }
+        } else {
+          tileState = domesticTiles[firstRowIndex + i][firstColumnIndex].tileState;
+          if (tileState === TileState.Ship) {
+            isShipSunken = false;
+            break;
+          }
+        }
+      }
+      if (isShipSunken) {
+        return ship.shipIndex;
+      } else {
+        return -1;
+      }
+    }
+    return -1;
+  }
 
   public static place(ship: Ship, tiles: Tile[][]) {
     const rowIndex = ship.rowIndex;

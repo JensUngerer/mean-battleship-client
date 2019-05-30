@@ -36,7 +36,7 @@ export class GameComponent implements OnInit {
     const adversarialTiles = this.tileGeneratorService.generateTiles(this.fieldSize, false);
     const shipSizes: number[] = [1, 2];
     this.shipGeneratorService.generateShips(shipSizes, domesticTiles);
-    this.game = new Game(domesticTiles, adversarialTiles, this.socketSendService);
+    this.game = new Game(domesticTiles, adversarialTiles, this.socketSendService, this.shipGeneratorService.ships);
     this.socketReceiveService.game = this.game;
   }
 

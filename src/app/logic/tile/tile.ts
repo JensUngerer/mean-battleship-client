@@ -45,7 +45,7 @@ export class Tile {
         this.text = 'X';
         break;
       case TileState.ShipSunken:
-        this.color = 'navy';
+        this.color = 'red';
         this.text = 'X';
         // this.setColoredBorder('red');
         break;

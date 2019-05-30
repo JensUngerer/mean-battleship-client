@@ -63,7 +63,7 @@ export class SocketReceiveService {
       columnIndex: msg.coordinates.columnIndex
     };
 
-    SocketReceiveService.internalGame.setDomesticState(coordinates);
+    SocketReceiveService.internalGame.receiveCoordinates(coordinates);
   }
 
   private tileState(msg: ITileStateMessage) {
