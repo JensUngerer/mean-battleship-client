@@ -1,6 +1,6 @@
 import { SocketSendService } from './logic/communication/sendService/socket-send.service';
 import { SocketReceiveService } from './logic/communication/receiveService/socket-receive.service';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { SocketService } from './logic/communication/socketService/socket.service';
 
 @Component({
@@ -9,9 +9,13 @@ import { SocketService } from './logic/communication/socketService/socket.servic
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private socketService: SocketService,
+  constructor(
+    @Inject(SocketReceiveService)
     private socketReceiveService: SocketReceiveService,
-    private socketSendService: SocketSendService) {
+    @Inject(SocketSendService) private socketSendService: SocketSendService,
+    @Inject(SocketService) private socketService: SocketService,
+  ) {
     this.socketService.startGame();
   }
 }
+

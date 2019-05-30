@@ -42,16 +42,21 @@ export class FieldComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.fieldSize = this.tiles.length;
+    // this.fieldSize = this.tiles.length;
 
-    this.isDomesticFieldClass = this.isDomesticField;
-    this.isAdversarialFieldClass = !this.isDomesticField;
+    // this.isDomesticFieldClass = this.isDomesticField;
+    // this.isAdversarialFieldClass = !this.isDomesticField;
 
-    this.initializeField();
+    // this.initializeField();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //this.initializeField();
+    if (this.tiles) {
+      this.fieldSize = this.tiles.length;
+      this.initializeField();
+    }
+    this.isDomesticFieldClass = this.isDomesticField;
+    this.isAdversarialFieldClass = !this.isDomesticField;
   }
 
   public onFired(coordinates: ITileCoordinates) {
@@ -61,7 +66,7 @@ export class FieldComponent implements OnInit, OnChanges {
   }
 
   private initializeField() {
-    if(this.tileGeneratorService && this.tileGeneratorService.generateLegendTiles){
+    if (this.tileGeneratorService && this.tileGeneratorService.generateLegendTiles) {
       this.legendTiles = this.tileGeneratorService.generateLegendTiles(this.fieldSize);
     }
   }

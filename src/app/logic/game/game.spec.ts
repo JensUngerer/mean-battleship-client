@@ -1,7 +1,7 @@
-import { Game } from './game';
+// import { Game } from './game';
 
-describe('Game', () => {
-  it('should create an instance', () => {
-    expect(new Game()).toBeTruthy();
-  });
-});
+// describe('Game', () => {
+//   it('should create an instance', () => {
+//     expect(new Game()).toBeTruthy();
+//   });
+// });

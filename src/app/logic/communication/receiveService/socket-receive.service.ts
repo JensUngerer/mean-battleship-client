@@ -1,5 +1,5 @@
-import { Game } from 'src/app/logic/game/game';
-import { Injectable, Inject } from '@angular/core';
+import { GameService } from './../../game/game.service';
+import { Injectable, Inject, Injector } from '@angular/core';
 import { SocketService } from '../socketService/socket.service';
 import { SocketIoReceiveTypes } from '../../../../../../common/src/communication/socketIoReceiveTypes';
 import { IMessage } from '../../../../../../common/src/communication/message/iMessage';
@@ -12,9 +12,27 @@ import { ITileStateMessage } from '../../../../../../common/src/communication/me
 })
 export class SocketReceiveService {
 
-  private static internalGame: Game;
+  constructor(@Inject(SocketService)
+  private socketService: SocketService,
+    @Inject(GameService)
+    private gameService: GameService) {
 
-  constructor(@Inject(SocketService) private socketService: SocketService) {
+    // // const injector = Injector.create({
+    // //   providers: [{
+    // //     provide: GameService,
+    // //     deps: [5, [1, 2]],
+    // //     multi: false
+    // //   }]
+    // // });
+    // const injector = Injector.create({
+    //   providers: [{
+    //     provide: GameService,
+    //     deps: [Number, Array, TileGeneratorService, ShipGeneratorService, SocketSendService],
+    //     multi: false
+    //   }]
+    // });
+    // const gameService: GameService = injector.get(GameService);
+    // this.gameService = gameService;
     this.init();
   }
 
@@ -23,32 +41,28 @@ export class SocketReceiveService {
     console.log(JSON.stringify(msg, null, 4));
   }
 
-  public set game(game: Game) {
-    SocketReceiveService.internalGame = game;
-  }
-
   private init() {
     this.socketService
       .registerReceive(SocketIoReceiveTypes.BeginningUser)
-      .subscribe(this.beginningUser);
+      .subscribe(this.beginningUser.bind(this));
 
     this.socketService
       .registerReceive(SocketIoReceiveTypes.Coordinates)
-      .subscribe(this.coordinates);
+      .subscribe(this.coordinates.bind(this));
 
     this.socketService
       .registerReceive(SocketIoReceiveTypes.TileState)
-      .subscribe(this.tileState);
+      .subscribe(this.tileState.bind(this));
 
 
     this.socketService
       .registerReceive(SocketIoReceiveTypes.RemainingTileState)
-      .subscribe(this.remainingTileState);
+      .subscribe(this.remainingTileState.bind(this));
 
 
     this.socketService
       .registerReceive(SocketIoReceiveTypes.GameWon)
-      .subscribe(this.gameWon);
+      .subscribe(this.gameWon.bind(this));
   }
 
   private beginningUser(msg: IMessage) {
@@ -63,19 +77,18 @@ export class SocketReceiveService {
       columnIndex: msg.coordinates.columnIndex
     };
 
-    SocketReceiveService.internalGame.receiveCoordinates(coordinates);
+    this.gameService.receiveCoordinates(coordinates);
   }
 
   private tileState(msg: ITileStateMessage) {
     // DEBUGGING:
     // SocketReceiveService.debugPrint(msg);
 
-    const coordinates: ITileCoordinates =  {
+    const coordinates: ITileCoordinates = {
       rowIndex: msg.coordinates.rowIndex,
       columnIndex: msg.coordinates.columnIndex
     };
-    SocketReceiveService.internalGame.receiveTileState(coordinates, msg.tileState);
-
+    this.gameService.receiveTileState(coordinates, msg.tileState);
   }
 
   private remainingTileState(msg: any) {

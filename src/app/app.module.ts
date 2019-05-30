@@ -1,3 +1,5 @@
+import { ShipGeneratorService } from 'src/app/logic/ship-generator/ship-generator.service';
+import { GameService } from './logic/game/game.service';
 import { SocketSendService } from './logic/communication/sendService/socket-send.service';
 import { SocketReceiveService } from './logic/communication/receiveService/socket-receive.service';
 import { TileGeneratorService } from './logic/tileGenerator/tile-generator.service';
@@ -34,7 +36,16 @@ import { SocketService } from './logic/communication/socketService/socket.servic
     TileGeneratorService,
     SocketService,
     SocketReceiveService,
-    SocketSendService
+    SocketSendService,
+    ShipGeneratorService,
+    {provide: 'FieldSizeToken', useValue: 5},
+    {provide: 'ShipSizesToken', useValue: [2, 1]},
+    GameService,
+    // {
+    //   provide: GameService, // https://stackoverflow.com/questions/55230263/angular-7-injected-service-is-undefined
+    //   deps: [Number, Array],
+    //   providers: []
+    // }
   ],
   bootstrap: [AppComponent]
 })

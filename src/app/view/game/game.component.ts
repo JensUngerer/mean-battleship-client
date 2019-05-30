@@ -1,10 +1,6 @@
-import { SocketReceiveService } from './../../logic/communication/receiveService/socket-receive.service';
-import { SocketSendService } from './../../logic/communication/sendService/socket-send.service';
-import { TileGeneratorService } from './../../logic/tileGenerator/tile-generator.service';
+import { GameService } from './../../logic/game/game.service';
 import { Tile } from './../../logic/tile/tile';
-import { Component, OnInit, Output } from '@angular/core';
-import { Game } from 'src/app/logic/game/game';
-import { ShipGeneratorService } from 'src/app/logic/ship-generator/ship-generator.service';
+import { Component, OnInit, Output, Inject } from '@angular/core';
 
 @Component({
   selector: 'bs-game',
@@ -16,8 +12,8 @@ import { ShipGeneratorService } from 'src/app/logic/ship-generator/ship-generato
   ]
 })
 export class GameComponent implements OnInit {
-  @Output()
-  public fieldSize = 5;
+  // @Output()
+  // public fieldSize = 5;
 
   @Output()
   public domesticTiles: Tile[][];
@@ -25,22 +21,16 @@ export class GameComponent implements OnInit {
   @Output()
   public adversarialTiles: Tile[][];
 
-  @Output()
-  public game: Game;
-
-  constructor(private tileGeneratorService: TileGeneratorService,
-              private shipGeneratorService: ShipGeneratorService,
-              private socketSendService: SocketSendService,
-              private socketReceiveService: SocketReceiveService) {
-    const domesticTiles = this.tileGeneratorService.generateTiles(this.fieldSize, true);
-    const adversarialTiles = this.tileGeneratorService.generateTiles(this.fieldSize, false);
-    const shipSizes: number[] = [1, 2];
-    this.shipGeneratorService.generateShips(shipSizes, domesticTiles);
-    this.game = new Game(domesticTiles, adversarialTiles, this.socketSendService, this.shipGeneratorService.ships);
-    this.socketReceiveService.game = this.game;
+  constructor(
+    @Output()
+    @Inject(GameService)
+    public gameService: GameService
+  ) {
+    // DEBUGGING
+    console.log('hello world!');
+    this.gameService.initialize();
+    console.log('Hello world two');
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

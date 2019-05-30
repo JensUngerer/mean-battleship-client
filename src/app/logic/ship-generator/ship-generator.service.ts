@@ -61,6 +61,8 @@ export class ShipGeneratorService {
         ctr++;
       } while (!isValid && ctr < MAX_NUMBER_OF_RETRIES);
       if (ctr === MAX_NUMBER_OF_RETRIES) {
+        this.resetThePreviouslySetShips();
+        this.internalShips = [];
         return false;
       }
       TilesHelperService.place(ship, this.tiles);
@@ -69,12 +71,25 @@ export class ShipGeneratorService {
     return true;
   }
 
+  private resetThePreviouslySetShips() {
+    this.ships.forEach((oneShip: Ship) => {
+      for(let i = 0; i < oneShip.size; i++) {
+        if(oneShip.horizontal){
+          this.tiles[oneShip.rowIndex][oneShip.columnIndex + i].tileState = TileState.Water;
+          this.tiles[oneShip.rowIndex][oneShip.columnIndex + i].ship = null;
+        } else {
+          this.tiles[oneShip.rowIndex + i][oneShip.columnIndex].tileState = TileState.Water;
+          this.tiles[oneShip.rowIndex + i][oneShip.columnIndex].ship = null;
+        }
+      }
+    });
+  }
+
   // private dispatchShips() {
   //   this.ships.forEach((ship) => {
   //     setTimeout(() => { this.shipActions.add(ship); });
   //   });
   // }
-
 
   private isBiggerThanField(ship: Ship) {
     const firstRowIndex = ship.rowIndex;
