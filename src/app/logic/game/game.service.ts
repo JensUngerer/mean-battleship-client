@@ -14,17 +14,17 @@ import { TilesHelperService } from '../tiles-helper/tiles-helper.service';
   providedIn: 'root'
 })
 export class GameService {
-  private internalDomesticTiles: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
-  private internalAdversarialTiles: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
+  private $internalDomesticTiles: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
+  private $internalAdversarialTiles: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
 
   private currentDomesticTiles: Tile[][] = [];
+  private currentAdversarialTiles: Tile[][] = [];
   private internalShips: BehaviorSubject<Ship[]> = new BehaviorSubject<Ship[]>([]);
 
+  private fieldSize: number;
+  private shipSizes: number[];
+
   constructor(
-    @Inject('FieldSizeToken')
-    private fieldSize: number,
-    @Inject('ShipSizesToken')
-    private shipSizes: number[],
     @Inject(TileGeneratorService)
     private tileGeneratorService: TileGeneratorService,
     @Inject(ShipGeneratorService)
@@ -33,35 +33,42 @@ export class GameService {
     private socketSendService: SocketSendService) {
   }
 
-  public initialize() {
-    // this.internalDomesticTiles.
-    this.internalDomesticTiles.next(this.tileGeneratorService.generateTiles(
+  public initialize(filedSize: number, shipSizes: number[]) {
+    this.fieldSize = filedSize;
+    this.shipSizes = shipSizes;
+
+    this.$internalDomesticTiles.next(this.tileGeneratorService.generateTiles(
       this.fieldSize,
       true
     ));
-    this.internalAdversarialTiles.next(this.tileGeneratorService.generateTiles(
+
+    this.$internalAdversarialTiles.next(this.tileGeneratorService.generateTiles(
       this.fieldSize,
       false
     ));
-    this.internalDomesticTiles.subscribe((domesticTiles: Tile[][]) => {
+
+    this.$internalDomesticTiles.subscribe((domesticTiles: Tile[][]) => {
       this.currentDomesticTiles = domesticTiles;
       const isShipGeneratorSuccessful: boolean = this.shipGeneratorService.generateShips(this.shipSizes, this.currentDomesticTiles);
       if (isShipGeneratorSuccessful) {
         this.internalShips.next(this.shipGeneratorService.ships);
       } else {
         this.internalShips.next([]);
-        this.internalDomesticTiles.next(this.currentDomesticTiles);
+        this.$internalDomesticTiles.next(this.currentDomesticTiles);
       }
-      //this.internalDomesticTiles.unsubscribe();
+    });
+
+    this.$internalAdversarialTiles.subscribe((adversarialTiles: Tile[][]) => {
+      this.currentAdversarialTiles = adversarialTiles;
     });
   }
 
   public get domesticTiles(): Observable<Tile[][]> {
-    return this.internalDomesticTiles;
+    return this.$internalDomesticTiles;
   }
 
   public get adversarialTiles(): Observable<Tile[][]> {
-    return this.internalAdversarialTiles;
+    return this.$internalAdversarialTiles;
   }
 
   public get ships(): BehaviorSubject<Ship[]> {
@@ -79,7 +86,7 @@ export class GameService {
     // this.setDomesticTileState(coordinates);
     this.sendCoordinates(coordinates);
 
-    // TODO: as a kind of response the adversarial tile-state has to be set...
+    // as a kind of response the adversarial tile-state has to be set...
     // this.setAdversarialTileState()
   }
 
@@ -91,7 +98,7 @@ export class GameService {
     // console.log(coordinates);
 
     // 1)
-    const domesticTile = this.domesticTiles[coordinates.rowIndex][coordinates.columnIndex];
+    const domesticTile = this.currentDomesticTiles[coordinates.rowIndex][coordinates.columnIndex];
     const domesticTileState = domesticTile.tileState;
     let newDomesticTileState;
     if (domesticTileState === TileState.Water) {
@@ -158,7 +165,7 @@ export class GameService {
   }
 
   private setDomesticTileState(coordinates: ITileCoordinates) {
-    const domesticTile = this.domesticTiles[coordinates.rowIndex][coordinates.columnIndex];
+    const domesticTile = this.currentDomesticTiles[coordinates.rowIndex][coordinates.columnIndex];
     const domesticTileState = domesticTile.tileState;
     let newDomesticTileState;
     if (domesticTileState === TileState.Water) {
@@ -174,7 +181,7 @@ export class GameService {
   }
 
   public receiveTileState(coordinates: ITileCoordinates, tileState: TileState) {
-    const adversarialTile: Tile = this.adversarialTiles[coordinates.rowIndex][coordinates.columnIndex];
+    const adversarialTile: Tile = this.currentAdversarialTiles[coordinates.rowIndex][coordinates.columnIndex];
 
     // TODO: FIXME: implement
     // adversarialTile.isStartTile = false;

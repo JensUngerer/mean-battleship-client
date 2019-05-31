@@ -27,9 +27,9 @@ export class GameComponent implements OnInit {
     public gameService: GameService
   ) {
     // DEBUGGING
-    console.log('hello world!');
-    this.gameService.initialize();
-    console.log('Hello world two');
+    // console.log('hello world!');
+    this.gameService.initialize(5, [2, 1]);
+    // console.log('Hello world two');
   }
 
   ngOnInit() {}
