@@ -12,6 +12,7 @@ import { IDomesticTileState } from './../../../../../../common/src/iDomesticTile
   providedIn: 'root'
 })
 export class SocketSendService {
+  private startGame$: Subject<IMessage> = new Subject<IMessage>();
   private coordinates$: Subject<ICoordinatesMessage> = new Subject<ICoordinatesMessage>();
   private tileState$: Subject<any> = new Subject<any>();
   private remainingTileState$: Subject<any> = new Subject<any>();
@@ -22,10 +23,19 @@ export class SocketSendService {
   }
 
   private init() {
+    this.socketService.registerSend<IMessage>(SocketIoSendTypes.StartGame, this.startGame$);
     this.socketService.registerSend<ICoordinatesMessage>(SocketIoSendTypes.Coordinates, this.coordinates$);
-    this.socketService.registerSend(SocketIoSendTypes.TileState, this.tileState$);
-    this.socketService.registerSend(SocketIoSendTypes.RemainingTileState, this.remainingTileState$);
-    this.socketService.registerSend(SocketIoSendTypes.GameWon, this.gameWon$);
+    this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.TileState, this.tileState$);
+    this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.RemainingTileState, this.remainingTileState$);
+    this.socketService.registerSend<IMessage>(SocketIoSendTypes.GameWon, this.gameWon$);
+  }
+
+  public startGame() {
+    const msg: IMessage = {
+      type: SocketIoSendTypes.StartGame,
+      sourceUserId: SocketService.userId
+    };
+    this.startGame$.next(msg);
   }
 
   public coordinates(coordinates: ITileCoordinates) {

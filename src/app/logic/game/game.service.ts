@@ -50,10 +50,14 @@ export class GameService {
       this.$internalShips.next(currentShips);
       this.$internalDomesticTiles.next(currentDomesticTiles);
       this.$internalAdversarialTiles.next(currentAdversarialTiles);
+
+      this.socketSendService.startGame();
     } else {
       this.$internalShips.next([]);
       this.$internalDomesticTiles.next([]);
       this.$internalAdversarialTiles.next([]);
+
+      alert('initialization error - please, refresh browser-window (F5)');
     }
   }
 

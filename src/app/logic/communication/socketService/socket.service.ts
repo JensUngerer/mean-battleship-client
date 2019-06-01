@@ -5,7 +5,6 @@ import { v4 } from 'uuid';
 import { IMessage } from './../../../../../../common/src/communication/message/iMessage';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
-import { SocketIoSendTypes } from '../../../../../../common/src/communication/socketIoSendTypes';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +16,6 @@ export class SocketService {
   constructor() {
     this.socket = io.connect(ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT);
     SocketService.userId = v4();
-  }
-
-  public startGame() {
-    this.socket.emit(SocketIoSendTypes.StartGame, SocketService.userId);
   }
 
   // cf. https://github.com/luixaviles/socket-io-typescript-chat/blob/master/client/src/app/shared/socket.service.ts

@@ -15,7 +15,6 @@ export class AppComponent {
     @Inject(SocketSendService) private socketSendService: SocketSendService,
     @Inject(SocketService) private socketService: SocketService,
   ) {
-    this.socketService.startGame();
   }
 }
 
