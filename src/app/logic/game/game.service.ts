@@ -16,11 +16,7 @@ import { TilesHelperService } from '../tiles-helper/tiles-helper.service';
 export class GameService {
   private $internalDomesticTiles: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
   private $internalAdversarialTiles: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
-
-  // private currentDomesticTiles: Tile[][] = [];
-  // private currentAdversarialTiles: Tile[][] = [];
   private $internalShips: BehaviorSubject<Ship[]> = new BehaviorSubject<Ship[]>([]);
-  // private currentShips: Ship[] = [];
 
   private fieldSize: number;
   private shipSizes: number[];
@@ -42,8 +38,6 @@ export class GameService {
       this.fieldSize,
       true
     );
-    // is done after ship generation
-    // this.$internalDomesticTiles.next(currentDomesticTiles);
 
     const currentAdversarialTiles: Tile[][] = this.tileGeneratorService.generateTiles(
       this.fieldSize,
@@ -61,30 +55,6 @@ export class GameService {
       this.$internalDomesticTiles.next([]);
       this.$internalAdversarialTiles.next([]);
     }
-
-    // current must contain the currently ('flushed') data
-    // this.$internalDomesticTiles.subscribe((tiles: Tile[][]) => {
-    //   this.currentDomesticTiles = tiles;
-    // });
-    // this.$internalAdversarialTiles.subscribe((tiles: Tile[][]) => {
-    //   this.currentAdversarialTiles = tiles;
-    // });
-
-    // let subscriber: Subscription = null;
-    // const setInitiallyShipsOnDomesticTiles: (domesticTiles: Tile[][]) => void = ;
-    // const subscription: Subscription = this.$internalDomesticTiles.subscribe((domesticTiles: Tile[][]) => {
-    //   // no matter what happens -> unregister setting of ships
-    //   // this.$internalDomesticTiles.unsubscribe();
-    //   // if (subscription) {
-    //   //   subscription.unsubscribe();
-    //   // } else {
-    //   //   console.error('no Subscription object');
-    //   // }
-    // });
-
-    // this.$internalAdversarialTiles.subscribe((adversarialTiles: Tile[][]) => {
-    //   this.currentAdversarialTiles = adversarialTiles;
-    // });
   }
 
   public get domesticTiles(): Observable<Tile[][]> {
@@ -100,28 +70,10 @@ export class GameService {
   }
 
   public onFired(coordinates: ITileCoordinates) {
-    // DEBUGGING:
-    // console.log(coordinates);
-
-    // only for DEBUGGING purposes
-    // this.receiveCoordinates(coordinates);
-
-
-    // this.setDomesticTileState(coordinates);
     this.sendCoordinates(coordinates);
-
-    // as a kind of response the adversarial tile-state has to be set...
-    // this.setAdversarialTileState()
   }
 
   private setDomesticState(coordinates: ITileCoordinates) {
-    // this.tileActions.receiveCoordinates(coordinates);
-
-    // DEBUGGING:
-    // console.log('Game-class');
-    // console.log(coordinates);
-
-    // 1)
     const currentDomesticTiles: Tile[][] = this.$internalDomesticTiles.value;
     const domesticTile = currentDomesticTiles[coordinates.rowIndex][coordinates.columnIndex];
     const domesticTileState = domesticTile.tileState;
