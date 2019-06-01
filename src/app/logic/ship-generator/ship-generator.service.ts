@@ -62,7 +62,7 @@ export class ShipGeneratorService {
       } while (!isValid && ctr < MAX_NUMBER_OF_RETRIES);
       if (ctr === MAX_NUMBER_OF_RETRIES) {
         this.resetThePreviouslySetShips();
-        this.internalShips = [];
+        this.internalShips.length = 0;
         return false;
       }
       TilesHelperService.place(ship, this.tiles);
@@ -73,13 +73,24 @@ export class ShipGeneratorService {
 
   private resetThePreviouslySetShips() {
     this.ships.forEach((oneShip: Ship) => {
-      for(let i = 0; i < oneShip.size; i++) {
-        if(oneShip.horizontal){
-          this.tiles[oneShip.rowIndex][oneShip.columnIndex + i].tileState = TileState.Water;
-          this.tiles[oneShip.rowIndex][oneShip.columnIndex + i].ship = null;
+      for (let i = 0; i < oneShip.size; i++) {
+        if (!this.tiles) {
+          return;
+        }
+        if (oneShip.horizontal) {
+          const tile: Tile = this.tiles[oneShip.rowIndex][oneShip.columnIndex + i];
+          if (!tile) {
+            continue;
+          }
+          tile.tileState = TileState.Water;
+          tile.ship = null;
         } else {
-          this.tiles[oneShip.rowIndex + i][oneShip.columnIndex].tileState = TileState.Water;
-          this.tiles[oneShip.rowIndex + i][oneShip.columnIndex].ship = null;
+          const tile: Tile = this.tiles[oneShip.rowIndex + i][oneShip.columnIndex];
+          if (!tile) {
+            continue;
+          }
+          tile.tileState = TileState.Water;
+          tile.ship = null;
         }
       }
     });

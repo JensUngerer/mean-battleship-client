@@ -1,6 +1,7 @@
 import { GameService } from './../../logic/game/game.service';
 import { Tile } from './../../logic/tile/tile';
 import { Component, OnInit, Output, Inject } from '@angular/core';
+import { Ship } from 'src/app/logic/ship/ship';
 
 @Component({
   selector: 'bs-game',
@@ -16,10 +17,13 @@ export class GameComponent implements OnInit {
   // public fieldSize = 5;
 
   @Output()
-  public domesticTiles: Tile[][];
+  public $ships: Ship[];
 
   @Output()
-  public adversarialTiles: Tile[][];
+  public $domesticTiles: Tile[][];
+
+  @Output()
+  public $adversarialTiles: Tile[][];
 
   constructor(
     @Output()
@@ -30,6 +34,7 @@ export class GameComponent implements OnInit {
     // console.log('hello world!');
     this.gameService.initialize(5, [2, 1]);
     // console.log('Hello world two');
+    // this.$ships = this.gameService.ships;
   }
 
   ngOnInit() {}
