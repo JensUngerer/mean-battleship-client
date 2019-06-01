@@ -6,7 +6,7 @@ import { ITileStateMessage } from './../../../../../../common/src/communication/
 import { SocketIoSendTypes } from '../../../../../../common/src/communication/socketIoSendTypes';
 import { IMessage } from '../../../../../../common/src/communication/message/iMessage';
 import { ITileCoordinates } from '../../../../../../common/src/tileCoordinates/iTileCoordinates';
-import { IDomesticTileState } from './../../../../../../common/src/iDomesticTileState/iDomesticTileState';
+import { IDomesticTileState } from './../../../../../../common/src/domesticTileState/iDomesticTileState';
 
 @Injectable({
   providedIn: 'root'
