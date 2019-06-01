@@ -109,6 +109,16 @@ export class GameService {
   public receiveCoordinates(coordinates: ITileCoordinates) {
     this.setDomesticTileState(coordinates);
     this.sinkShipTiles(coordinates);
+    const currentDomesticTiles: Tile[][] = this.$internalDomesticTiles.value;
+    const updatedDomesticTile: Tile = currentDomesticTiles[coordinates.rowIndex][coordinates.columnIndex];
+    this.socketSendService.tileState({
+      columnIndex: coordinates.columnIndex,
+      rowIndex: coordinates.columnIndex,
+      isEndTile: updatedDomesticTile.isEndTile,
+      isHorizontal: false, // TODO: FIXME: how is this state used and how is it possible to set it (e.g. from the ship-data)
+      isStartTile: updatedDomesticTile.isStartTile,
+      tileState: updatedDomesticTile.tileState
+    });
   }
 
   private sinkShipTiles(coordinates: ITileCoordinates) {

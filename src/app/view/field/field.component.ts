@@ -60,7 +60,7 @@ export class FieldComponent implements OnInit, OnChanges {
   }
 
   public onFired(coordinates: ITileCoordinates) {
-    console.log('received tile-coordinates:' + coordinates.rowIndex + ' ' + coordinates.columnIndex);
+    console.log('send tile-coordinates:' + coordinates.rowIndex + ' ' + coordinates.columnIndex);
 
     this.fired.emit(coordinates);
   }

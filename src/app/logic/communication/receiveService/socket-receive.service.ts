@@ -82,7 +82,7 @@ export class SocketReceiveService {
 
   private tileState(msg: ITileStateMessage) {
     // DEBUGGING:
-    // SocketReceiveService.debugPrint(msg);
+    SocketReceiveService.debugPrint(msg);
 
     const coordinates: ITileCoordinates = {
       rowIndex: msg.coordinates.rowIndex,
