@@ -14,9 +14,9 @@ import { TilesHelperService } from '../tiles-helper/tiles-helper.service';
   providedIn: 'root'
 })
 export class GameService {
-  private $internalDomesticTiles: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
-  private $internalAdversarialTiles: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
-  private $internalShips: BehaviorSubject<Ship[]> = new BehaviorSubject<Ship[]>([]);
+  private internalDomesticTiles$: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
+  private internalAdversarialTiles$: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
+  private internalShips$: BehaviorSubject<Ship[]> = new BehaviorSubject<Ship[]>([]);
 
   private fieldSize: number;
   private shipSizes: number[];
@@ -47,30 +47,30 @@ export class GameService {
     const isShipGeneratorSuccessful: boolean = this.shipGeneratorService.generateShips(this.shipSizes, currentDomesticTiles);
     if (isShipGeneratorSuccessful) {
       const currentShips = this.shipGeneratorService.ships;
-      this.$internalShips.next(currentShips);
-      this.$internalDomesticTiles.next(currentDomesticTiles);
-      this.$internalAdversarialTiles.next(currentAdversarialTiles);
+      this.internalShips$.next(currentShips);
+      this.internalDomesticTiles$.next(currentDomesticTiles);
+      this.internalAdversarialTiles$.next(currentAdversarialTiles);
 
       this.socketSendService.startGame();
     } else {
-      this.$internalShips.next([]);
-      this.$internalDomesticTiles.next([]);
-      this.$internalAdversarialTiles.next([]);
+      this.internalShips$.next([]);
+      this.internalDomesticTiles$.next([]);
+      this.internalAdversarialTiles$.next([]);
 
       alert('initialization error - please, refresh browser-window (F5)');
     }
   }
 
-  public get domesticTiles(): Observable<Tile[][]> {
-    return this.$internalDomesticTiles;
+  public get domesticTiles$(): Observable<Tile[][]> {
+    return this.internalDomesticTiles$;
   }
 
-  public get adversarialTiles(): Observable<Tile[][]> {
-    return this.$internalAdversarialTiles;
+  public get adversarialTiles$(): Observable<Tile[][]> {
+    return this.internalAdversarialTiles$;
   }
 
-  public get ships(): BehaviorSubject<Ship[]> {
-    return this.$internalShips;
+  public get ships$(): BehaviorSubject<Ship[]> {
+    return this.internalShips$;
   }
 
   public onFired(coordinates: ITileCoordinates) {
@@ -78,7 +78,7 @@ export class GameService {
   }
 
   private setDomesticState(coordinates: ITileCoordinates) {
-    const currentDomesticTiles: Tile[][] = this.$internalDomesticTiles.value;
+    const currentDomesticTiles: Tile[][] = this.internalDomesticTiles$.value;
     const domesticTile = currentDomesticTiles[coordinates.rowIndex][coordinates.columnIndex];
     const domesticTileState = domesticTile.tileState;
     let newDomesticTileState;
@@ -110,7 +110,7 @@ export class GameService {
   }
 
   private sendTileState(coordinates: ITileCoordinates) {
-    const currentDomesticTiles: Tile[][] = this.$internalDomesticTiles.value;
+    const currentDomesticTiles: Tile[][] = this.internalDomesticTiles$.value;
     const updatedDomesticTile: Tile = currentDomesticTiles[coordinates.rowIndex][coordinates.columnIndex];
     this.socketSendService.tileState({
       columnIndex: coordinates.columnIndex,
@@ -123,15 +123,15 @@ export class GameService {
   }
 
   private sinkShipTiles(coordinates: ITileCoordinates) {
-    const currentDomesticTiles: Tile[][] = this.$internalDomesticTiles.value;
+    const currentDomesticTiles: Tile[][] = this.internalDomesticTiles$.value;
     const shipIndex: number = TilesHelperService
       .isShipSunken(coordinates.rowIndex,
         coordinates.columnIndex,
         currentDomesticTiles,
-        this.$internalShips.value);
+        this.internalShips$.value);
     // let newDomesticTileState: TileState = null;
     if (shipIndex !== -1) {
-      const ship: Ship = this.$internalShips.value[shipIndex];
+      const ship: Ship = this.internalShips$.value[shipIndex];
       ship.isSunken = true;
 
       const firstRowIndex = ship.rowIndex;
@@ -150,13 +150,13 @@ export class GameService {
           });
         }
         // the state has changed -> flush it to the UI
-        this.$internalDomesticTiles.next(currentDomesticTiles);
+        this.internalDomesticTiles$.next(currentDomesticTiles);
       }
     }
   }
 
   private setDomesticTileState(coordinates: ITileCoordinates) {
-    const currentDomesticTiles: Tile[][] = this.$internalDomesticTiles.value;
+    const currentDomesticTiles: Tile[][] = this.internalDomesticTiles$.value;
     const domesticTile = currentDomesticTiles[coordinates.rowIndex][coordinates.columnIndex];
     const domesticTileState = domesticTile.tileState;
     let newDomesticTileState;
@@ -172,11 +172,11 @@ export class GameService {
     domesticTile.tileState = newDomesticTileState;
 
     // flush it as the state has just changed
-    this.$internalDomesticTiles.next(currentDomesticTiles);
+    this.internalDomesticTiles$.next(currentDomesticTiles);
   }
 
   public receiveTileState(coordinates: ITileCoordinates, tileState: TileState) {
-    const currentAdversarialTiles: Tile[][] = this.$internalAdversarialTiles.value;
+    const currentAdversarialTiles: Tile[][] = this.internalAdversarialTiles$.value;
     const adversarialTile: Tile = currentAdversarialTiles[coordinates.rowIndex][coordinates.columnIndex];
 
     // TODO: FIXME: implement
@@ -190,6 +190,6 @@ export class GameService {
     adversarialTile.tileState = tileState;
 
     // flush it as the state has just been changed
-    this.$internalAdversarialTiles.next(currentAdversarialTiles);
+    this.internalAdversarialTiles$.next(currentAdversarialTiles);
   }
 }

@@ -1,5 +1,5 @@
 <!-- domestic field -->
-<bs-field [caption]="'YOUR FIELD'" [tiles]="gameService.domesticTiles | async" [isDomesticField]="true"></bs-field>
+<bs-field [caption]="'YOUR FIELD'" [tiles]="gameService.domesticTiles$ | async" [isDomesticField]="true"></bs-field>
 <br>
 <!-- adversarial field-->
-<bs-field (fired)="gameService.onFired($event)" [caption]="'ENEMY FIELD'" [tiles]="gameService.adversarialTiles | async" [isDomesticField]="false"></bs-field>
+<bs-field (fired)="gameService.onFired($event)" [caption]="'ENEMY FIELD'" [tiles]="gameService.adversarialTiles$ | async" [isDomesticField]="false"></bs-field>
