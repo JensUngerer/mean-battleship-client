@@ -8,6 +8,7 @@ import { Ship } from '../ship/ship';
 import { ITileCoordinates } from '../../../../../common/src/tileCoordinates/iTileCoordinates';
 import { TileState } from '../../../../../common/src/tileState/tileState.enum';
 import { TilesHelperService } from '../tiles-helper/tiles-helper.service';
+import { GameState } from '../../../../../common/src/gameState/game-state.enum';
 
 // https://stackoverflow.com/questions/55230263/angular-7-injected-service-is-undefined
 @Injectable({
@@ -17,6 +18,7 @@ export class GameService {
   private internalDomesticTiles$: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
   private internalAdversarialTiles$: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
   private internalShips$: BehaviorSubject<Ship[]> = new BehaviorSubject<Ship[]>([]);
+  private internalGameState$: BehaviorSubject<GameState> = new BehaviorSubject<GameState>(GameState.GameNotStarted);
 
   private fieldSize: number;
   private shipSizes: number[];
@@ -56,8 +58,9 @@ export class GameService {
       this.internalShips$.next([]);
       this.internalDomesticTiles$.next([]);
       this.internalAdversarialTiles$.next([]);
+      this.internalGameState$.next(GameState.InitializationError);
 
-      alert('initialization error - please, refresh browser-window (F5)');
+      // alert('initialization error - please, refresh browser-window (F5)');
     }
   }
 
@@ -71,6 +74,10 @@ export class GameService {
 
   public get ships$(): BehaviorSubject<Ship[]> {
     return this.internalShips$;
+  }
+
+  public get gameState$(): Observable<GameState> {
+    return this.internalGameState$;
   }
 
   public onFired(coordinates: ITileCoordinates) {

@@ -1,3 +1,4 @@
+<bs-game-state [gameState]="gameService.gameState$ | async"></bs-game-state>
 <!-- domestic field -->
 <bs-field [caption]="'YOUR FIELD'" [tiles]="gameService.domesticTiles$ | async" [isDomesticField]="true"></bs-field>
 <br>
