@@ -88,16 +88,6 @@ export class GameService {
       newDomesticTileState = TileState.ShipSunken;
     }
     domesticTile.tileState = newDomesticTileState;
-
-    // 2)
-    this.socketSendService.tileState({
-      rowIndex: coordinates.rowIndex,
-      columnIndex: coordinates.columnIndex,
-      isEndTile: false, // TODO: these flags are used for visualization only? -> implement!
-      isHorizontal: false,
-      isStartTile: false,
-      tileState: newDomesticTileState
-    });
   }
 
   private sendCoordinates(coordinates: ITileCoordinates) {
@@ -107,8 +97,15 @@ export class GameService {
   }
 
   public receiveCoordinates(coordinates: ITileCoordinates) {
+    // actions to perform
     this.setDomesticTileState(coordinates);
     this.sinkShipTiles(coordinates);
+
+    // respond to 'game-partner'
+    this.sendTileState(coordinates);
+  }
+
+  private sendTileState(coordinates: ITileCoordinates) {
     const currentDomesticTiles: Tile[][] = this.$internalDomesticTiles.value;
     const updatedDomesticTile: Tile = currentDomesticTiles[coordinates.rowIndex][coordinates.columnIndex];
     this.socketSendService.tileState({
