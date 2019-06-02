@@ -67,6 +67,8 @@ export class SocketReceiveService {
 
   private beginningUser(msg: IMessage) {
     SocketReceiveService.debugPrint(msg);
+
+    this.gameService.setBeginningUser();
   }
 
   private coordinates(msg: ICoordinatesMessage) {

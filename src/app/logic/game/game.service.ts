@@ -48,6 +48,7 @@ export class GameService {
 
     const isShipGeneratorSuccessful: boolean = this.shipGeneratorService.generateShips(this.shipSizes, currentDomesticTiles);
     if (isShipGeneratorSuccessful) {
+      this.internalGameState$.next(GameState.NotTurn);
       const currentShips = this.shipGeneratorService.ships;
       this.internalShips$.next(currentShips);
       this.internalDomesticTiles$.next(currentDomesticTiles);
@@ -62,6 +63,10 @@ export class GameService {
 
       // alert('initialization error - please, refresh browser-window (F5)');
     }
+  }
+
+  public setBeginningUser() {
+    this.internalGameState$.next(GameState.Turn);
   }
 
   public get domesticTiles$(): Observable<Tile[][]> {
@@ -102,6 +107,9 @@ export class GameService {
   }
 
   private sendCoordinates(coordinates: ITileCoordinates) {
+    // the user has just triggered the sending of coordinates -> so her / his turn ends
+    this.internalGameState$.next(GameState.NotTurn);
+
     // DEBUGGING:
     // console.log(coordinates);
     this.socketSendService.coordinates(coordinates);
@@ -114,6 +122,9 @@ export class GameService {
 
     // respond to 'game-partner'
     this.sendTileState(coordinates);
+
+    // the incoming coordinates have just been processed -> so its now her / his turn
+    this.internalGameState$.next(GameState.Turn);
   }
 
   private sendTileState(coordinates: ITileCoordinates) {
@@ -121,7 +132,7 @@ export class GameService {
     const updatedDomesticTile: Tile = currentDomesticTiles[coordinates.rowIndex][coordinates.columnIndex];
     this.socketSendService.tileState({
       columnIndex: coordinates.columnIndex,
-      rowIndex: coordinates.columnIndex,
+      rowIndex: coordinates.rowIndex,
       isEndTile: updatedDomesticTile.isEndTile,
       isHorizontal: false, // TODO: FIXME: how is this state used and how is it possible to set it (e.g. from the ship-data)
       isStartTile: updatedDomesticTile.isStartTile,
