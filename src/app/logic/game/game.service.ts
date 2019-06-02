@@ -156,20 +156,23 @@ export class GameService {
       const firstColumnIndex = ship.columnIndex;
 
       for (let i = 0; i < ship.size; i++) {
+        let currentShipTileCoordinates: ITileCoordinates = null;
         if (ship.horizontal) {
-          this.setDomesticState({
+          currentShipTileCoordinates = {
             rowIndex: firstRowIndex,
             columnIndex: firstColumnIndex + i
-          })
+          };
         } else {
-          this.setDomesticState({
+          currentShipTileCoordinates = {
             rowIndex: firstRowIndex + i,
             columnIndex: firstColumnIndex
-          });
+          };
         }
-        // the state has changed -> flush it to the UI
-        this.internalDomesticTiles$.next(currentDomesticTiles);
+        this.setDomesticState(currentShipTileCoordinates);
+        this.sendTileState(currentShipTileCoordinates);
       }
+      // the state(s) have just been changed -> flush it to the UI
+      this.internalDomesticTiles$.next(currentDomesticTiles);
     }
   }
 
