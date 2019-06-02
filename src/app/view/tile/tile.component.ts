@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, OnChanges } from '@angular/core';
 import { Tile } from 'src/app/logic/tile/tile';
 import { EventEmitter } from '@angular/core';
 import { ITileCoordinates } from './../../../../../common/src/tileCoordinates/iTileCoordinates';
+import { GameState } from '../../../../../common/src/gameState/game-state.enum';
 
 @Component({
   selector: 'bs-tile',
@@ -11,7 +12,10 @@ import { ITileCoordinates } from './../../../../../common/src/tileCoordinates/iT
     './tile.component.css'
   ]
 })
-export class TileComponent implements OnInit {
+export class TileComponent implements OnInit, OnChanges {
+  @Input()
+  private gameState: GameState;
+
   @Input()
   public tile: Tile;
 
@@ -21,6 +25,10 @@ export class TileComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges() {
+    this.tile.gameState = this.gameState;
   }
 
   public fire($event: any) {

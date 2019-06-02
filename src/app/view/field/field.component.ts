@@ -3,6 +3,7 @@ import { Tile } from './../../logic/tile/tile';
 import { TileGeneratorService } from './../../logic/tileGenerator/tile-generator.service';
 import { Component, OnInit, Output, HostBinding, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { ITileCoordinates } from '../../../../../common/src/tileCoordinates/iTileCoordinates';
+import { GameState } from '../../../../../common/src/gameState/game-state.enum';
 
 @Component({
   selector: 'bs-field',
@@ -17,17 +18,14 @@ export class FieldComponent implements OnInit, OnChanges {
   @Output()
   public legendTiles: string[] = [];
 
-  //@Output()
-  //public tiles: [][] = [];
-
   @Input()
   public isDomesticField: boolean;
 
-  //@Input()
-  //public fieldSize: number;
-
   @Input()
   public tiles: Tile[][];
+
+  @Input()
+  public gameState: GameState;
 
   @Output()
   public fired: EventEmitter<ITileCoordinates> = new EventEmitter<ITileCoordinates>();

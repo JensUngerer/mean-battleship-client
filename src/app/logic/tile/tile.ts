@@ -1,5 +1,6 @@
 import { TileState } from '../../../../../common/src/tileState/tileState.enum';
 import { Ship } from '../ship/ship';
+import { GameState } from '../../../../../common/src/gameState/game-state.enum';
 
 export class Tile {
 
@@ -13,12 +14,43 @@ export class Tile {
   private internalTileState: TileState;
 
   constructor(private isDomesticTile: boolean,
-              public xCoordinate: number,
-              public yCoordinate: number,
-              public isDisabled: boolean,
-              tileState: TileState) {
+    public xCoordinate: number,
+    public yCoordinate: number,
+    public isDisabled: boolean,
+    tileState: TileState) {
     this.tileState = tileState;
   }
+
+  public set gameState(gameState: GameState) {
+    if (this.isDomesticTile) {
+      return;
+    }
+    switch (gameState) {
+      case GameState.GameNotStarted:
+        this.isDisabled = true;
+        break;
+      case GameState.Turn:
+        this.isDisabled = false;
+        break;
+      case GameState.NotTurn:
+        this.isDisabled = true;
+        break;
+      case GameState.GameLost:
+        this.isDisabled = true;
+        break;
+      case GameState.GameWon:
+        this.isDisabled = true;
+        break;
+      case GameState.InitializationError:
+        this.isDisabled = true;
+        break;
+      default:
+        console.error('unknown behavior for gameState:' + gameState);
+        this.isDisabled = true;
+        break;
+    }
+  }
+
 
   public get tileState(): TileState {
     return this.internalTileState;

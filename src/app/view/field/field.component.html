@@ -1,17 +1,9 @@
 <div>{{caption}}</div>
-<!-- <div class="row">
-  <battleship-legend-tile-corner></battleship-legend-tile-corner>
-  <battleship-legend-tile *ngFor="let legendTile of legendTiles" [caption]="legendTile"></battleship-legend-tile>
-</div>
-<div class="row" *ngFor="let row of tiles; let i = index">
-  <battleship-legend-tile [caption]="i+1"></battleship-legend-tile>
-  <battleship-tile [gameState]="gameState" [tile]="tile" *ngFor="let tile of row; let j = index"></battleship-tile>
-</div> -->
 <div class="row">
   <bs-legend-tile-corner></bs-legend-tile-corner>
   <bs-legend-tile *ngFor="let legendTileCaption of legendTiles" [caption]="legendTileCaption"></bs-legend-tile>
 </div>
 <div class="row" *ngFor="let row of tiles; let i = index">
   <bs-legend-tile [caption]="i+1"></bs-legend-tile>
-  <bs-tile *ngFor="let tile of row; let j = index" [tile]="tile" (fired)="onFired($event)"></bs-tile>
+  <bs-tile *ngFor="let tile of row; let j = index" [gameState]="gameState" [tile]="tile" (fired)="onFired($event)"></bs-tile>
 </div>
