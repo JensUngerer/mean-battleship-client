@@ -184,6 +184,24 @@ export class GameService {
     }
   }
 
+  private sendRemainingShipTileStates() {
+    const domesticTiles: Tile[][] = this.internalDomesticTiles$.value;
+    const length: number = domesticTiles.length;
+
+    for (let i = 0; i < length; i++) {
+      for (let j = 0; j < length; j++) {
+        const tile: Tile = domesticTiles[i][j];
+        if (tile.tileState === TileState.Ship) {
+          this.sendTileState({
+            rowIndex: i,
+            columnIndex: j
+          });
+        }
+      }
+    }
+  }
+
+
   private isGameLost() {
     let allShipsSunken = true;
     const ships: Ship[] = this.internalShips$.value;
@@ -243,5 +261,6 @@ export class GameService {
 
   public receiveGameWon() {
     this.internalGameState$.next(GameState.GameWon);
+    this.sendRemainingShipTileStates();
   }
 }
