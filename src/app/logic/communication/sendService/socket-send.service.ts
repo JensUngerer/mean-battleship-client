@@ -14,9 +14,9 @@ import { IDomesticTileState } from './../../../../../../common/src/domesticTileS
 export class SocketSendService {
   private startGame$: Subject<IMessage> = new Subject<IMessage>();
   private coordinates$: Subject<ICoordinatesMessage> = new Subject<ICoordinatesMessage>();
-  private tileState$: Subject<any> = new Subject<any>();
-  private remainingTileState$: Subject<any> = new Subject<any>();
-  private gameWon$: Subject<any> = new Subject<any>();
+  private tileState$: Subject<ITileStateMessage> = new Subject<ITileStateMessage>();
+  private remainingTileState$: Subject<ITileStateMessage> = new Subject<ITileStateMessage>();
+  private gameWon$: Subject<IMessage> = new Subject<IMessage>();
 
   constructor(@Inject(SocketService) private socketService: SocketService) {
     this.init();
@@ -79,11 +79,11 @@ export class SocketSendService {
     this.remainingTileState$.next(msg);
   }
 
-  public gameWon(msg: IMessage) {
-    // const msg: IMessage = {
-    //   type: CommunicationSendTypes.GameWon,
-    //   sourceUserId: CommunicationSocketService.userId,
-    // };
+  public gameWon() {
+    const msg: IMessage = {
+      sourceUserId: SocketService.userId,
+      type: SocketIoSendTypes.GameWon
+    };
     this.gameWon$.next(msg);
   }
 }

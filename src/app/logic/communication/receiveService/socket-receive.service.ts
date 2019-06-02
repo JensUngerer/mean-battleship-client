@@ -99,5 +99,7 @@ export class SocketReceiveService {
 
   private gameWon(msg: any) {
     SocketReceiveService.debugPrint(msg);
+
+    this.gameService.receiveGameWon();
   }
 }

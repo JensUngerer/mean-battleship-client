@@ -1,3 +1,4 @@
+import { SocketService } from './../communication/socketService/socket.service';
 import { Observable, Subject, BehaviorSubject, Subscriber, Subscription } from 'rxjs';
 import { SocketSendService } from './../communication/sendService/socket-send.service';
 import { TileGeneratorService } from './../tileGenerator/tile-generator.service';
@@ -9,6 +10,8 @@ import { ITileCoordinates } from '../../../../../common/src/tileCoordinates/iTil
 import { TileState } from '../../../../../common/src/tileState/tileState.enum';
 import { TilesHelperService } from '../tiles-helper/tiles-helper.service';
 import { GameState } from '../../../../../common/src/gameState/game-state.enum';
+import { IMessage } from '../../../../../common/src/communication/message/iMessage';
+import { SocketIoSendTypes } from '../../../../../common/src/communication/socketIoSendTypes';
 
 // https://stackoverflow.com/questions/55230263/angular-7-injected-service-is-undefined
 @Injectable({
@@ -28,6 +31,8 @@ export class GameService {
     private tileGeneratorService: TileGeneratorService,
     @Inject(ShipGeneratorService)
     private shipGeneratorService: ShipGeneratorService,
+    //  @Inject(TileTransitionService)
+    // private tileTransitionService: TileTransitionService,
     @Inject(SocketSendService)
     private socketSendService: SocketSendService) {
   }
@@ -169,10 +174,32 @@ export class GameService {
           };
         }
         this.setDomesticState(currentShipTileCoordinates);
+        // send-sunken-ship-tile
         this.sendTileState(currentShipTileCoordinates);
       }
+      // check-if-game-partner has just won, i.e. whether this user has just lost the game
+      this.sendGameWonIfNecessary();
       // the state(s) have just been changed -> flush it to the UI
       this.internalDomesticTiles$.next(currentDomesticTiles);
+    }
+  }
+
+  private isGameLost() {
+    let allShipsSunken = true;
+    const ships: Ship[] = this.internalShips$.value;
+    ships.forEach((ship) => {
+      if (!ship.isSunken) {
+        allShipsSunken = false;
+      }
+    });
+    return allShipsSunken;
+  }
+
+  private sendGameWonIfNecessary() {
+    const isGameLost: boolean = this.isGameLost();
+    if (isGameLost) {
+      this.internalGameState$.next(GameState.GameLost);
+      this.socketSendService.gameWon();
     }
   }
 
@@ -212,5 +239,9 @@ export class GameService {
 
     // flush it as the state has just been changed
     this.internalAdversarialTiles$.next(currentAdversarialTiles);
+  }
+
+  public receiveGameWon() {
+    this.internalGameState$.next(GameState.GameWon);
   }
 }
