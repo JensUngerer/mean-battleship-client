@@ -1,12 +1,10 @@
 <div *ngIf="gameState === GameState.Turn">
-  <div>Turn:<div class="greenDot"></div>
-  </div>
+  <div>Turn:<div class="greenDot"></div></div>
 </div>
 <div *ngIf="gameState === GameState.NotTurn">
-  <div>Turn:<div class="redDot"></div>
-  </div>
+  <div>Turn:<div class="redDot"></div></div>
 </div>
 <div *ngIf="gameState !== GameState.NotTurn && gameState !== GameState.Turn">
-  <div class="blackDot"></div>
+  <div>Turn:<div class="blackDot"></div></div>
   <div>{{gameState | json}}</div>
 </div>
