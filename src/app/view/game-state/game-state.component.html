@@ -1,10 +1,12 @@
 <div *ngIf="gameState === GameState.Turn">
   <div>Turn:<div class="greenDot"></div></div>
+  <div>{{getStateTextFrom(gameState)}}</div>
 </div>
 <div *ngIf="gameState === GameState.NotTurn">
   <div>Turn:<div class="redDot"></div></div>
+  <div>{{getStateTextFrom(gameState)}}</div>
 </div>
 <div *ngIf="gameState !== GameState.NotTurn && gameState !== GameState.Turn">
   <div>Turn:<div class="blackDot"></div></div>
-  <div>{{gameState | json}}</div>
+  <div>{{getStateTextFrom(gameState)}}</div>
 </div>
