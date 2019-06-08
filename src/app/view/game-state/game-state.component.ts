@@ -1,5 +1,5 @@
 import { GameState } from './../../../../../common/src/gameState/game-state.enum';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'bs-game-state',
@@ -7,6 +7,8 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./game-state.component.css']
 })
 export class GameStateComponent implements OnInit {
+  @Output()
+  public GameState: any = GameState;
 
   @Input()
   public gameState: GameState;
