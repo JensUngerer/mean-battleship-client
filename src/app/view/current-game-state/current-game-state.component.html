@@ -1,0 +1,7 @@
+<div *ngFor="let oneExpectedGameState of expectedGameStates; let i = index">
+  <div *ngIf="gameState === oneExpectedGameState">
+    <div>Turn:<div class="{{dotColorNames[i]}}"></div>
+    </div>
+    <div>{{getStateTextFrom(gameState)}}</div>
+  </div>
+</div>

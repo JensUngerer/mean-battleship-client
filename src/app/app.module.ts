@@ -16,6 +16,7 @@ import { LegendTileComponent } from './view/legend-tile/legend-tile.component';
 import { LegendTileCornerComponent } from './view/legend-tile-corner/legend-tile-corner.component';
 import { TileComponent } from './view/tile/tile.component';
 import { SocketService } from './logic/communication/socketService/socket.service';
+import { CurrentGameStateComponent } from './view/current-game-state/current-game-state.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { SocketService } from './logic/communication/socketService/socket.servic
     GameStateComponent,
     LegendTileComponent,
     LegendTileCornerComponent,
-    TileComponent
+    TileComponent,
+    CurrentGameStateComponent
   ],
   imports: [
     BrowserModule,

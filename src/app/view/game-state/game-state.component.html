@@ -1,12 +1,1 @@
-<div *ngIf="gameState === GameState.Turn">
-  <div>Turn:<div class="greenDot"></div></div>
-  <div>{{getStateTextFrom(gameState)}}</div>
-</div>
-<div *ngIf="gameState === GameState.NotTurn">
-  <div>Turn:<div class="redDot"></div></div>
-  <div>{{getStateTextFrom(gameState)}}</div>
-</div>
-<div *ngIf="gameState !== GameState.NotTurn && gameState !== GameState.Turn">
-  <div>Turn:<div class="blackDot"></div></div>
-  <div>{{getStateTextFrom(gameState)}}</div>
-</div>
+<bs-current-game-state [gameStateToText]="gameStateToText" [gameState]="gameState" [expectedGameStates]="[GameState.NotTurn, GameState.Turn, GameState.GameWon, GameState.GameLost, GameState.InitializationError, GameState.GameNotStarted]" [dotColorNames]="['redDot', 'greenDot', 'blackDot', 'blackDot', 'blackDot', 'blackDot']"></bs-current-game-state>

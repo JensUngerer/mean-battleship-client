@@ -15,28 +15,31 @@ export class GameStateComponent implements OnInit {
   public GameState: any = GameState;
 
   @Output()
-  public getStateTextFrom(theGameState: GameState): string {
-    switch (theGameState) {
-      case GameState.Turn:
-        return 'It is your turn: please \'fire\' on a gaming-tile.';
-      case GameState.NotTurn:
-        return 'It is not your turn: please wait until your game-partner finished.';
-      case GameState.InitializationError:
-        return 'An initialization error occurred: please refresh the screen (F5).';
-      case GameState.GameWon:
-        return 'Game over: you have just won the game.';
-      case GameState.GameLost:
-        return 'Game over: you have just lost the game.';
-      case GameState.GameNotStarted:
-        return 'The game has not yet been started: please wait until a second game-partner connects to the server.';
-      default:
-        return 'Unknown GameState-value';
-    }
-  }
+  public gameStateToText: { [key: string]: string };
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
-  }
+    this.gameStateToText = {};
 
+    let gameStateAsString = GameState.NotTurn as string;
+    this.gameStateToText[gameStateAsString] = 'It is not your turn: please wait until your game-partner finished.';
+
+    gameStateAsString = GameState.Turn as string;
+    this.gameStateToText[gameStateAsString] = 'It is your turn: please \'fire\' on a gaming-tile.';
+
+    gameStateAsString = GameState.InitializationError as string;
+    this.gameStateToText[gameStateAsString] = 'An initialization error occurred: please refresh the screen (F5).';
+
+    gameStateAsString = GameState.GameWon as string;
+    this.gameStateToText[gameStateAsString] = 'Game over: you have just won the game.';
+
+    gameStateAsString = GameState.GameLost as string;
+    this.gameStateToText[gameStateAsString] = 'Game over: you have just lost the game.';
+
+    gameStateAsString = GameState.GameNotStarted as string;
+    this.gameStateToText[gameStateAsString] = 'The game has not yet been started: please wait until' +
+      ' a second game-partner connects to the server.';
+  }
 }
