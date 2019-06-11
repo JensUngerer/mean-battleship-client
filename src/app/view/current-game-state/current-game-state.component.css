@@ -20,3 +20,19 @@
   border-radius: 50%;
   display: inline-block;
 }
+
+.flexContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.spaceBetween {
+  width: 5px;
+}
+
+.currentGameStateContainer {
+  border: solid 1px gray;
+  margin: 1px;
+  padding: 1px;
+}
