@@ -15,7 +15,7 @@ export class CurrentGameStateComponent implements OnInit {
   public expectedGameStates: GameState[];
 
   @Input()
-  public dotColorNames: string[];
+  public dotClasses: string[];
 
   // https://github.com/Microsoft/TypeScript/issues/24220
   @Input()

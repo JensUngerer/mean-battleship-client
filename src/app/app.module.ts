@@ -11,7 +11,6 @@ import { AppComponent } from './app.component';
 import { GameComponent } from './view/game/game.component';
 import { FieldComponent } from './view/field/field.component';
 import { GameStartComponent } from './view/game-start/game-start.component';
-import { GameStateComponent } from './view/game-state/game-state.component';
 import { LegendTileComponent } from './view/legend-tile/legend-tile.component';
 import { LegendTileCornerComponent } from './view/legend-tile-corner/legend-tile-corner.component';
 import { TileComponent } from './view/tile/tile.component';
@@ -24,7 +23,6 @@ import { CurrentGameStateComponent } from './view/current-game-state/current-gam
     GameComponent,
     FieldComponent,
     GameStartComponent,
-    GameStateComponent,
     LegendTileComponent,
     LegendTileCornerComponent,
     TileComponent,

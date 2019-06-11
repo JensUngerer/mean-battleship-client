@@ -1,3 +1,4 @@
+import { CurrentGameStateService } from './../../logic/currentGameState/current-game-state.service';
 import { GameService } from './../../logic/game/game.service';
 import { Tile } from './../../logic/tile/tile';
 import { Component, OnInit, Output, Inject } from '@angular/core';
@@ -17,7 +18,10 @@ export class GameComponent implements OnInit {
   constructor(
     @Output()
     @Inject(GameService)
-    public gameService: GameService
+    public gameService: GameService,
+    @Output()
+    @Inject(CurrentGameStateService)
+    public currentGameStateService: CurrentGameStateService
   ) {
     this.gameService.initialize(5, [2, 1]);
   }
