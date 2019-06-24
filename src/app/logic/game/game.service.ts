@@ -1,3 +1,4 @@
+import { DisableBlindTilesService } from './../disableBlindTiles/disable-blind-tiles.service';
 import { SocketService } from './../communication/socketService/socket.service';
 import { Observable, Subject, BehaviorSubject, Subscriber, Subscription } from 'rxjs';
 import { SocketSendService } from './../communication/sendService/socket-send.service';
@@ -34,7 +35,9 @@ export class GameService {
     //  @Inject(TileTransitionService)
     // private tileTransitionService: TileTransitionService,
     @Inject(SocketSendService)
-    private socketSendService: SocketSendService) {
+    private socketSendService: SocketSendService,
+    @Inject(DisableBlindTilesService)
+    private disableBlindTilesService) {
   }
 
   public initialize(filedSize: number, shipSizes: number[]) {
@@ -57,6 +60,11 @@ export class GameService {
       const currentShips = this.shipGeneratorService.ships;
       this.internalShips$.next(currentShips);
       this.internalDomesticTiles$.next(currentDomesticTiles);
+
+      // wait until the 'blind tiles' are disabled ...
+      // this.internalAdversarialTiles$.next(currentAdversarialTiles);
+
+      this.disableBlindTilesService.disableBlindTiles(currentAdversarialTiles);
       this.internalAdversarialTiles$.next(currentAdversarialTiles);
 
       this.socketSendService.startGame();

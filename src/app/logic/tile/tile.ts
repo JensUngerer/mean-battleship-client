@@ -11,6 +11,8 @@ export class Tile {
   public isStartTile = false;
   public isEndTile = false;
 
+  public isBlindTile = false;
+
   private internalTileState: TileState;
 
   constructor(private isDomesticTile: boolean,
@@ -22,7 +24,7 @@ export class Tile {
   }
 
   public set gameState(gameState: GameState) {
-    if (this.isDomesticTile) {
+    if (this.isDomesticTile || this.isBlindTile) {
       return;
     }
     switch (gameState) {
