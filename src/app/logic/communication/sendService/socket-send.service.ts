@@ -12,22 +12,22 @@ import { IDomesticTileState } from './../../../../../../common/src/domesticTileS
   providedIn: 'root'
 })
 export class SocketSendService {
-  private startGame$: Subject<IMessage> = new Subject<IMessage>();
-  private coordinates$: Subject<ICoordinatesMessage> = new Subject<ICoordinatesMessage>();
-  private tileState$: Subject<ITileStateMessage> = new Subject<ITileStateMessage>();
-  private remainingTileState$: Subject<ITileStateMessage> = new Subject<ITileStateMessage>();
-  private gameWon$: Subject<IMessage> = new Subject<IMessage>();
+  private startGame$: Subject<IMessage> = null;//new Subject<IMessage>();
+  private coordinates$: Subject<ICoordinatesMessage> = null;//new Subject<ICoordinatesMessage>();
+  private tileState$: Subject<ITileStateMessage> = null;//new Subject<ITileStateMessage>();
+  private remainingTileState$: Subject<ITileStateMessage> = null;// new Subject<ITileStateMessage>();
+  private gameWon$: Subject<IMessage> = null; // new Subject<IMessage>();
 
   constructor(@Inject(SocketService) private socketService: SocketService) {
     this.init();
   }
 
   private init() {
-    this.socketService.registerSend<IMessage>(SocketIoSendTypes.StartGame, this.startGame$);
-    this.socketService.registerSend<ICoordinatesMessage>(SocketIoSendTypes.Coordinates, this.coordinates$);
-    this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.TileState, this.tileState$);
-    this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.RemainingTileState, this.remainingTileState$);
-    this.socketService.registerSend<IMessage>(SocketIoSendTypes.GameWon, this.gameWon$);
+    this.startGame$ = this.socketService.registerSend<IMessage>(SocketIoSendTypes.StartGame);
+    this.coordinates$ = this.socketService.registerSend<ICoordinatesMessage>(SocketIoSendTypes.Coordinates);
+    this.tileState$ = this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.TileState);
+    this.remainingTileState$ = this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.RemainingTileState);
+    this.gameWon$ = this.socketService.registerSend<IMessage>(SocketIoSendTypes.GameWon);
   }
 
   public startGame() {

@@ -1,6 +1,6 @@
 import { GameService } from './../../game/game.service';
 import { Injectable, Inject, Injector } from '@angular/core';
-import { SocketService } from '../socketService/socket.service';
+import { SocketService, SocketIoSubscriptionMappingReceiver } from '../socketService/socket.service';
 import { SocketIoReceiveTypes } from '../../../../../../common/src/communication/socketIoReceiveTypes';
 import { IMessage } from '../../../../../../common/src/communication/message/iMessage';
 import { ITileCoordinates } from '../../../../../../common/src/tileCoordinates/iTileCoordinates';
@@ -66,12 +66,19 @@ export class SocketReceiveService {
   }
 
   private beginningUser(msg: IMessage) {
+    if (msg.type === SocketIoReceiveTypes.InitialValue) {
+      return;
+    }
     SocketReceiveService.debugPrint(msg);
 
     this.gameService.setBeginningUser();
   }
 
   private coordinates(msg: ICoordinatesMessage) {
+    if (msg.type === SocketIoReceiveTypes.InitialValue) {
+      return;
+    }
+
     SocketReceiveService.debugPrint(msg);
 
     const coordinates: ITileCoordinates = {
@@ -83,6 +90,10 @@ export class SocketReceiveService {
   }
 
   private tileState(msg: ITileStateMessage) {
+    if (msg.type === SocketIoReceiveTypes.InitialValue) {
+      return;
+    }
+
     // DEBUGGING:
     SocketReceiveService.debugPrint(msg);
 
@@ -94,10 +105,20 @@ export class SocketReceiveService {
   }
 
   private remainingTileState(msg: any) {
+    if (msg.type === SocketIoReceiveTypes.InitialValue) {
+      return;
+    }
+
     SocketReceiveService.debugPrint(msg);
+
+    // TODO: why is there no logic?
   }
 
   private gameWon(msg: any) {
+    if (msg.type === SocketIoReceiveTypes.InitialValue) {
+      return;
+    }
+
     SocketReceiveService.debugPrint(msg);
 
     this.gameService.receiveGameWon();
