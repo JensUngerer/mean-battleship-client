@@ -37,7 +37,7 @@ export class GameStartComponent implements OnInit {
   ngOnInit() {
   }
 
-  public navigateToGameView() {
+  public navigateToGameView($event: MouseEvent) {
     this.router.navigateByUrl('battleship-game');
   }
 

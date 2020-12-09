@@ -16,11 +16,7 @@ import { Ship } from 'src/app/logic/ship/ship';
 export class GameComponent implements OnInit {
 
   constructor(
-    @Output()
-    @Inject(GameService)
     public gameService: GameService,
-    @Output()
-    @Inject(CurrentGameStateService)
     public currentGameStateService: CurrentGameStateService
   ) {
     this.gameService.initialize(5, [2, 1]);
