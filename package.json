@@ -21,7 +21,7 @@
     "@angular/router": "^11.0.3",
     "@angular/typescript": "^2.0.0-5d0e199",
     "core-js": "^3.8.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "rxjs": "^6.6.3",
     "socket.io-client": "^2.3.1",
     "tslib": "^2.0.0",
