@@ -29,7 +29,9 @@ export class SocketIoSubscriptionMappingSender {
     this.send$ = new ReplaySubject<any>();
     this.sendId = sendId;
     // this.sendSubscription = this.send$.pipe(tap(this.onSendId.bind(this))).subscribe();
-    this.sendSubscription = this.webSocketSubject.pipe(this.onSendId.bind(this)).subscribe()
+    this.sendSubscription = this.webSocketSubject
+    .pipe(tap(this.onSendId.bind(this)))
+    .subscribe()
     return this.send$;
   }
 
