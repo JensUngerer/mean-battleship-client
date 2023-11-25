@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import * as io from 'socket.io-client';
+import  io from 'socket.io-client';
 import { ConfigSocketIo } from './../../../../../../common/src/config/configSocketIo';
 import { v4 } from 'uuid';
 import { IMessage } from './../../../../../../common/src/communication/message/iMessage';
@@ -18,7 +18,7 @@ export class SocketIoSubscriptionMappingSender {
     this.socket.emit(this.sendId, data);
   }
 
-  constructor(private socket: SocketIOClient.Socket) {
+  constructor(private socket: any) {
   }
 
   onSend<T extends IMessage>(sendId: string) {
@@ -51,7 +51,7 @@ export class SocketIoSubscriptionMappingReceiver {
     this.receiver$.next(data);
   }
 
-  constructor(private socket: SocketIOClient.Socket) {
+  constructor(private socket: any) {
   }
 
   onReceive(receiveId: string) {
@@ -74,13 +74,13 @@ export class SocketIoSubscriptionMappingReceiver {
 })
 export class SocketService implements OnDestroy {
   public static userId: string;
-  private socket: SocketIOClient.Socket;
+  private socket: any;
   private receiveIdObservableMapping: { [key: string]: SocketIoSubscriptionMappingReceiver } = {};
   private sendIdObservableMapping: { [key: string]: SocketIoSubscriptionMappingSender } = {};
 
 
   constructor() {
-    this.socket = io.connect(ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT);
+    this.socket = io((ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT)); // io.connect(ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT);
     SocketService.userId = v4();
   }
 
