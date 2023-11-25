@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { fromEvent, asyncScheduler } from 'rxjs';
 import { throttle, delay, repeat, throttleTime, tap } from 'rxjs/operators';
 import { SocketIoReceiveTypes } from '../../../../../../common/src/communication/socketIoReceiveTypes';
+import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
 
 export class SocketIoSubscriptionMappingSender {
   private sendId: string;
@@ -15,22 +16,29 @@ export class SocketIoSubscriptionMappingSender {
   private sendSubscription: Subscription;
 
   private onSendId<T extends IMessage>(data: T) {
-    this.socket.emit(this.sendId, data);
+    // https://rxjs.dev/api/webSocket/webSocket
+    // this.webSocketSubject.next(data);
+    this.send$.next(data);
   }
 
-  constructor(private socket: any) {
+  constructor(private webSocketSubject: WebSocketSubject<IMessage>) {
+    // const subscritption = this.webSocketSubject.subscribe();
   }
 
   onSend<T extends IMessage>(sendId: string) {
     this.send$ = new ReplaySubject<any>();
     this.sendId = sendId;
-    this.sendSubscription = this.send$.pipe(tap(this.onSendId.bind(this))).subscribe();
+    // this.sendSubscription = this.send$.pipe(tap(this.onSendId.bind(this))).subscribe();
+    this.sendSubscription = this.webSocketSubject.pipe(this.onSendId.bind(this)).subscribe()
     return this.send$;
   }
 
   onDestroy() {
-    if (this.sendSubscription) {
-      this.sendSubscription.unsubscribe();
+    // if (this.sendSubscription) {
+    //   this.sendSubscription.unsubscribe();
+    // }
+    if (this.webSocketSubject){
+      this.webSocketSubject.complete();
     }
   }
 
@@ -45,19 +53,29 @@ export class SocketIoSubscriptionMappingReceiver {
   private receiver$: BehaviorSubject<any>;
 
   private registeredReceiveId: string;
+  private subcription: Subscription;
 
 
   private onReceiveId(data: IMessage) {
     this.receiver$.next(data);
   }
 
-  constructor(private socket: any) {
+  constructor(private webSocketSubject: WebSocketSubject<IMessage>) {
+    
   }
 
   onReceive(receiveId: string) {
     this.receiver$ = new BehaviorSubject<any>(SocketIoSubscriptionMappingReceiver.INITIAL_VALUE);
 
-    this.socket.on(receiveId, this.onReceiveId.bind(this));
+    this.subcription = this.webSocketSubject.subscribe({
+      next: this.onReceiveId.bind(this),
+      error: err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
+      complete: () => console.log('complete') // Called when connection is closed (for whatever reason).
+    });
+
+    // this.receiver$ = this.webSocketSubject.multiplex(()=> ({subscribe: 'A'}, ()=> {{unsubscribe: 'A'}}, message => message.type === 'A'));
+
+    // this.webSocketSubject.on(receiveId, this.onReceiveId.bind(this));
 
     this.registeredReceiveId = receiveId;
 
@@ -65,7 +83,10 @@ export class SocketIoSubscriptionMappingReceiver {
   }
 
   onDestroy() {
-    this.socket.removeListener(this.registeredReceiveId, this.onReceiveId.bind(this));
+    // this.webSocketSubject.removeListener(this.registeredReceiveId, this.onReceiveId.bind(this));
+    if (this.subcription){
+      this.subcription.unsubscribe();
+    }
   }
 }
 
@@ -74,13 +95,16 @@ export class SocketIoSubscriptionMappingReceiver {
 })
 export class SocketService implements OnDestroy {
   public static userId: string;
-  private socket: any;
+  private webSocketSubject: WebSocketSubject<IMessage>;
+  // private socket: any;
   private receiveIdObservableMapping: { [key: string]: SocketIoSubscriptionMappingReceiver } = {};
   private sendIdObservableMapping: { [key: string]: SocketIoSubscriptionMappingSender } = {};
 
 
   constructor() {
-    this.socket = io((ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT)); // io.connect(ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT);
+    // this.socket = io((ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT)); // io.connect(ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT);
+    const url = ConfigSocketIo.SOCKET_IO_SERVER_URL_WS + ConfigSocketIo.PORT;
+    this.webSocketSubject =  webSocket(url);
     SocketService.userId = v4();
   }
 
@@ -138,7 +162,7 @@ export class SocketService implements OnDestroy {
   // }
 
   public registerReceive(receiveId: string): Observable<any> {
-    const receiver = new SocketIoSubscriptionMappingReceiver(this.socket);
+    const receiver = new SocketIoSubscriptionMappingReceiver(this.webSocketSubject);
     this.receiveIdObservableMapping[receiveId] = receiver;
     return receiver.onReceive(receiveId);
   }
@@ -147,7 +171,7 @@ export class SocketService implements OnDestroy {
     // sendData.subscribe((data: IMessage) => {
     //   this.socket.emit(sendId, data);
     // });
-    const sender = new SocketIoSubscriptionMappingSender(this.socket);
+    const sender = new SocketIoSubscriptionMappingSender(this.webSocketSubject);
     this.sendIdObservableMapping[sendId] = sender;
     return sender.onSend<T>(sendId);
   }
