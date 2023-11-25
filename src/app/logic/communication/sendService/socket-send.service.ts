@@ -35,6 +35,7 @@ export class SocketSendService {
       type: SocketIoSendTypes.StartGame,
       sourceUserId: SocketService.userId
     };
+    console.log(JSON.stringify(msg, null, 4));
     this.startGame$.next(msg);
   }
 

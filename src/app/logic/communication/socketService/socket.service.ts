@@ -17,8 +17,8 @@ export class SocketIoSubscriptionMappingSender {
 
   private onSendId<T extends IMessage>(data: T) {
     // https://rxjs.dev/api/webSocket/webSocket
-    // this.webSocketSubject.next(data);
-    this.send$.next(data);
+    this.webSocketSubject.next(data);
+    // this.send$.next(data);
   }
 
   constructor(private webSocketSubject: WebSocketSubject<IMessage>) {
@@ -28,20 +28,20 @@ export class SocketIoSubscriptionMappingSender {
   onSend<T extends IMessage>(sendId: string) {
     this.send$ = new ReplaySubject<any>();
     this.sendId = sendId;
-    // this.sendSubscription = this.send$.pipe(tap(this.onSendId.bind(this))).subscribe();
-    this.sendSubscription = this.webSocketSubject
-    .pipe(tap(this.onSendId.bind(this)))
-    .subscribe()
+    this.sendSubscription = this.send$.pipe(tap(this.onSendId.bind(this))).subscribe();
+    // this.sendSubscription = this.webSocketSubject
+    // .pipe(tap(this.onSendId.bind(this)))
+    // .subscribe()
     return this.send$;
   }
 
   onDestroy() {
-    // if (this.sendSubscription) {
-    //   this.sendSubscription.unsubscribe();
-    // }
-    if (this.webSocketSubject){
-      this.webSocketSubject.complete();
+    if (this.sendSubscription) {
+      this.sendSubscription.unsubscribe();
     }
+    // if (this.webSocketSubject){
+    //   this.webSocketSubject.complete();
+    // }
   }
 
 }
@@ -59,6 +59,7 @@ export class SocketIoSubscriptionMappingReceiver {
 
 
   private onReceiveId(data: IMessage) {
+    // console.log('incoming:'+ JSON.stringify(data));
     this.receiver$.next(data);
   }
 
@@ -101,16 +102,20 @@ export class SocketService implements OnDestroy {
   // private socket: any;
   private receiveIdObservableMapping: { [key: string]: SocketIoSubscriptionMappingReceiver } = {};
   private sendIdObservableMapping: { [key: string]: SocketIoSubscriptionMappingSender } = {};
-
+  private subscription: Subscription;
 
   constructor() {
     // this.socket = io((ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT)); // io.connect(ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT);
-    const url = ConfigSocketIo.SOCKET_IO_SERVER_URL_WS + ConfigSocketIo.PORT;
+    const url = ConfigSocketIo.SOCKET_IO_SERVER_URL_WS + ":" + ConfigSocketIo.PORT;
     this.webSocketSubject =  webSocket(url);
+    this.subscription = this.webSocketSubject.subscribe();
     SocketService.userId = v4();
   }
 
   ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     for (const receiveId in this.receiveIdObservableMapping) {
       if (this.receiveIdObservableMapping.hasOwnProperty(receiveId)) {
         const receiver = this.receiveIdObservableMapping[receiveId];
