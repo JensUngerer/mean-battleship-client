@@ -78,7 +78,7 @@ export class GameService {
 
       // this.webocketService.init();
       
-      //this.socketSendService.startGame();
+      this.socketSendService.startGame();
     } else {
       this.internalShips$.next([]);
       this.internalDomesticTiles$.next([]);

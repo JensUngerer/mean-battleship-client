@@ -11,6 +11,7 @@ import { SocketReceiveService } from './logic/communication/receiveService/socke
   providedIn: 'root'
 })
 export class WebSocketService {
+
   private webSocketConnection = new Subject<any>();
 
   public static userId = v4();
@@ -19,6 +20,11 @@ export class WebSocketService {
     private httpClient: HttpClient,
   ) {
   }
+
+
+  // getSubject(): Subject<any> {
+  //   return this.webSocketConnection;
+  // }
 
   private requestConnectionWithRandomPort(): Promise<any> {
     const userId = WebSocketService.userId;

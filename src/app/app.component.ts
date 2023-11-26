@@ -21,7 +21,8 @@ export class AppComponent {
     const initPromise = this.webSocketService.init();
     initPromise.then(() => {
           this.socketReceiveService.init();
-          this.socketSendService.init();
+          const subject = this.webSocketService.registerReceive();
+          this.socketSendService.init(subject);
     });
 
   }

@@ -7,6 +7,7 @@ import { SocketIoSendTypes } from '../../../../../../common/src/communication/so
 import { IMessage } from '../../../../../../common/src/communication/message/iMessage';
 import { ITileCoordinates } from '../../../../../../common/src/tileCoordinates/iTileCoordinates';
 import { IDomesticTileState } from './../../../../../../common/src/domesticTileState/iDomesticTileState';
+import { WebSocketService } from 'src/app/web-socket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +19,13 @@ export class SocketSendService {
   private remainingTileState$: Subject<ITileStateMessage> = null;// new Subject<ITileStateMessage>();
   private gameWon$: Subject<IMessage> = null; // new Subject<IMessage>();
 
-  constructor(/*@Inject(SocketService) private socketService: SocketService*/) {
+  private webSocketSubject : Subject<any>;
+  constructor() {
     // this.init();
   }
 
-  public init() {
+  public init(webSocketSubject: Subject<any>) {
+    this.webSocketSubject = webSocketSubject;
   //   this.startGame$ = this.socketService.registerSend<IMessage>(SocketIoSendTypes.StartGame);
   //   this.coordinates$ = this.socketService.registerSend<ICoordinatesMessage>(SocketIoSendTypes.Coordinates);
   //   this.tileState$ = this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.TileState);
@@ -33,9 +36,10 @@ export class SocketSendService {
   public startGame() {
     const msg: IMessage = {
       type: SocketIoSendTypes.StartGame,
-      sourceUserId: SocketService.userId
+      sourceUserId: WebSocketService.userId
     };
-    this.startGame$.next(msg);
+    // this.startGame$.next(msg);
+    this.webSocketSubject.next(msg);
   }
 
   public coordinates(coordinates: ITileCoordinates) {
