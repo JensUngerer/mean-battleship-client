@@ -8,6 +8,13 @@ import { IMessage } from '../../../../../../common/src/communication/message/iMe
 import { ITileCoordinates } from '../../../../../../common/src/tileCoordinates/iTileCoordinates';
 import { IDomesticTileState } from './../../../../../../common/src/domesticTileState/iDomesticTileState';
 import { WebSocketService } from 'src/app/web-socket.service';
+import { ICommunicationContainer } from './../../../../../../common/src/communication/message/iCommunicationContainer';
+import { CommunicationType } from '../../../../../../common/src/communication/communicationType';
+import jsonrpc from 'jsonrpc-lite';
+import { CommunicationMethod } from '../../../../../../common/src/communication/communicationMethod';
+import { v4 } from 'uuid';
+import { ICoordinatesContainer } from '../../../../../../common/src/communication/message/iCoordinatesContainer';
+import { ITileStateContainer } from '../../../../../../common/src/communication/message/ITileStateContainer';
 
 @Injectable({
   providedIn: 'root'
@@ -34,32 +41,58 @@ export class SocketSendService {
   }
 
   public startGame() {
-    const msg: IMessage = {
-      type: SocketIoSendTypes.StartGame,
-      sourceUserId: WebSocketService.userId
+    // const msg: IMessage = {
+    //   type: SocketIoSendTypes.StartGame,
+    //   sourceUserId: WebSocketService.userId
+    // };
+    const container : ICommunicationContainer = {
+      type: CommunicationType.AddUser,
+      sourceUserId: WebSocketService.userId,
     };
+    const msg = jsonrpc.request(v4(), CommunicationMethod.Post, container);
     if (!this.webSocketSubject) {
       console.error('cannot start game');
       return;
     }
-    this.webSocketSubject?.next(msg);
+    this.webSocketSubject?.next(msg.serialize());
   }
 
   public coordinates(coordinates: ITileCoordinates) {
-    const msg: ICoordinatesMessage = {
-      type: SocketIoSendTypes.Coordinates,
+    // const msg: ICoordinatesMessage = {
+    //   type: SocketIoSendTypes.Coordinates,
+    //   sourceUserId: WebSocketService.userId,
+    //   coordinates: {
+    //     rowIndex: coordinates.rowIndex,
+    //     columnIndex: coordinates.columnIndex
+    //   }
+    // };
+    const container : ICoordinatesContainer = {
+      type: CommunicationType.Coordinates,
       sourceUserId: WebSocketService.userId,
       coordinates: {
         rowIndex: coordinates.rowIndex,
         columnIndex: coordinates.columnIndex
       }
     };
-    this.webSocketSubject?.next(msg);
+    const msg = jsonrpc.request(v4(), CommunicationMethod.Post, container);
+    this.webSocketSubject?.next(msg.serialize());
   }
 
   public tileState(newDomesticTileState: IDomesticTileState) {
-    const msg: ITileStateMessage = {
-      type: SocketIoSendTypes.TileState,
+    // const msg: ITileStateMessage = {
+    //   type: SocketIoSendTypes.TileState,
+    //   sourceUserId: WebSocketService.userId,
+    //   coordinates: {
+    //     rowIndex: newDomesticTileState.rowIndex,
+    //     columnIndex: newDomesticTileState.columnIndex
+    //   },
+    //   tileState: newDomesticTileState.tileState,
+    //   isStartTile: newDomesticTileState.isStartTile,
+    //   isEndTile: newDomesticTileState.isEndTile,
+    //   isHorizontal: newDomesticTileState.isHorizontal
+    // };
+    const container : ITileStateContainer = {
+      type: CommunicationType.TileState,
       sourceUserId: WebSocketService.userId,
       coordinates: {
         rowIndex: newDomesticTileState.rowIndex,
@@ -70,7 +103,8 @@ export class SocketSendService {
       isEndTile: newDomesticTileState.isEndTile,
       isHorizontal: newDomesticTileState.isHorizontal
     };
-    this.webSocketSubject?.next(msg);
+    const msg = jsonrpc.request(v4(), CommunicationMethod.Post, container);
+    this.webSocketSubject?.next(msg.serialize());
   }
 
   // public remainingTileState(msg: ITileStateMessage) {
@@ -87,10 +121,15 @@ export class SocketSendService {
   // }
 
   public gameWon() {
-    const msg: IMessage = {
+    // const msg: IMessage = {
+    //   sourceUserId: WebSocketService.userId,
+    //   type: SocketIoSendTypes.GameWon
+    // };
+    const container : ICommunicationContainer = {
+      type: CommunicationType.GameWon,
       sourceUserId: WebSocketService.userId,
-      type: SocketIoSendTypes.GameWon
     };
-    this.webSocketSubject?.next(msg);
+    const msg = jsonrpc.request(v4(), CommunicationMethod.Post, container);
+    this.webSocketSubject?.next(msg.serialize());
   }
 }
