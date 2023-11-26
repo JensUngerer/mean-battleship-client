@@ -47,22 +47,37 @@ export class SocketReceiveService {
 
   private processMessages(msg: IMessage) {
     switch (msg.type) {
-        case SocketIoSendTypes.StartGame:
-          this.startGameSuccessResponse(msg);
+      case SocketIoSendTypes.StartGame:
+        this.startGameSuccessResponse(msg);
         break;
-
-        default:
-          console.error('unknown-message');
-          console.error(JSON.stringify(msg, null, 4));
-          break;
+      case SocketIoReceiveTypes.BeginningUser:
+        this.beginningUser(msg);
+      case SocketIoReceiveTypes.Coordinates:
+        const castedMsg: ICoordinatesMessage = msg as ICoordinatesMessage;
+        this.coordinates(castedMsg);
+        break;
+      case SocketIoReceiveTypes.TileState:
+        const casteTileStatedMsg: ITileStateMessage = msg as ITileStateMessage;
+        this.tileState(casteTileStatedMsg);
+        break;
+        case SocketIoSendTypes.RemainingTileState:
+          this.remainingTileState(msg);
+        break;
+        case SocketIoReceiveTypes.GameWon:
+        this.gameWon(msg);
+      break;
+      default:
+        console.error('unknown-message');
+        console.error(JSON.stringify(msg, null, 4));
+        break;
     }
   }
 
   public init() {
     this.webSocketService
-    .registerReceive()
-    .pipe(tap(this.processMessages.bind(this)))
-    .subscribe();
+      .registerReceive()
+      .pipe(tap(this.processMessages.bind(this)))
+      .subscribe();
 
 
     // this.socketService

@@ -13,11 +13,11 @@ import { WebSocketService } from 'src/app/web-socket.service';
   providedIn: 'root'
 })
 export class SocketSendService {
-  private startGame$: Subject<IMessage> = null;//new Subject<IMessage>();
-  private coordinates$: Subject<ICoordinatesMessage> = null;//new Subject<ICoordinatesMessage>();
-  private tileState$: Subject<ITileStateMessage> = null;//new Subject<ITileStateMessage>();
-  private remainingTileState$: Subject<ITileStateMessage> = null;// new Subject<ITileStateMessage>();
-  private gameWon$: Subject<IMessage> = null; // new Subject<IMessage>();
+  // private startGame$: Subject<IMessage> = null;//new Subject<IMessage>();
+  // private coordinates$: Subject<ICoordinatesMessage> = null;//new Subject<ICoordinatesMessage>();
+  // private tileState$: Subject<ITileStateMessage> = null;//new Subject<ITileStateMessage>();
+  // private remainingTileState$: Subject<ITileStateMessage> = null;// new Subject<ITileStateMessage>();
+  // private gameWon$: Subject<IMessage> = null; // new Subject<IMessage>();
 
   private webSocketSubject : Subject<any>;
   constructor() {
@@ -38,7 +38,6 @@ export class SocketSendService {
       type: SocketIoSendTypes.StartGame,
       sourceUserId: WebSocketService.userId
     };
-    // this.startGame$.next(msg);
     this.webSocketSubject.next(msg);
   }
 
@@ -51,7 +50,7 @@ export class SocketSendService {
         columnIndex: coordinates.columnIndex
       }
     };
-    this.coordinates$.next(msg);
+    this.webSocketSubject.next(msg);
   }
 
   public tileState(newDomesticTileState: IDomesticTileState) {
@@ -67,27 +66,27 @@ export class SocketSendService {
       isEndTile: newDomesticTileState.isEndTile,
       isHorizontal: newDomesticTileState.isHorizontal
     };
-    this.tileState$.next(msg);
+    this.webSocketSubject.next(msg);
   }
 
-  public remainingTileState(msg: ITileStateMessage) {
-    // const msg: ITileStateMessage = {
-    //   type: action.type,
-    //   sourceUserId: CommunicationSocketService.userId,
-    //   coordinates: {
-    //     rowIndex: action.payload.rowIndex,
-    //     columnIndex: action.payload.columnIndex
-    //   },
-    //   tileState: action.payload.tileState,
-    // };
-    this.remainingTileState$.next(msg);
-  }
+  // public remainingTileState(msg: ITileStateMessage) {
+  //   // const msg: ITileStateMessage = {
+  //   //   type: action.type,
+  //   //   sourceUserId: CommunicationSocketService.userId,
+  //   //   coordinates: {
+  //   //     rowIndex: action.payload.rowIndex,
+  //   //     columnIndex: action.payload.columnIndex
+  //   //   },
+  //   //   tileState: action.payload.tileState,
+  //   // };
+  //   this.webSocketSubject.next(msg);
+  // }
 
   public gameWon() {
     const msg: IMessage = {
       sourceUserId: SocketService.userId,
       type: SocketIoSendTypes.GameWon
     };
-    this.gameWon$.next(msg);
+    this.webSocketSubject.next(msg);
   }
 }
