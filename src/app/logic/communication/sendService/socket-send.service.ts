@@ -18,11 +18,11 @@ export class SocketSendService {
   private remainingTileState$: Subject<ITileStateMessage> = null;// new Subject<ITileStateMessage>();
   private gameWon$: Subject<IMessage> = null; // new Subject<IMessage>();
 
-  constructor(@Inject(SocketService) private socketService: SocketService) {
-    this.init();
+  constructor(/*@Inject(SocketService) private socketService: SocketService*/) {
+    // this.init();
   }
 
-  private init() {
+  public init() {
   //   this.startGame$ = this.socketService.registerSend<IMessage>(SocketIoSendTypes.StartGame);
   //   this.coordinates$ = this.socketService.registerSend<ICoordinatesMessage>(SocketIoSendTypes.Coordinates);
   //   this.tileState$ = this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.TileState);

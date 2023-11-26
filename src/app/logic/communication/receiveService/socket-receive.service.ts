@@ -8,6 +8,7 @@ import { ICoordinatesMessage } from '../../../../../../common/src/communication/
 import { ITileStateMessage } from '../../../../../../common/src/communication/message/iTileStateMessage';
 import { SocketIoSendTypes } from '../../../../../../common/src/communication/socketIoSendTypes';
 import { tap } from 'rxjs/operators';
+import { WebSocketService } from 'src/app/web-socket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ import { tap } from 'rxjs/operators';
 export class SocketReceiveService {
 
   constructor(@Inject(SocketService)
-  private socketService: SocketService,
+  @Inject(WebSocketService)
+  private webSocketService: WebSocketService,
     @Inject(GameService)
     private gameService: GameService) {
 
@@ -35,7 +37,7 @@ export class SocketReceiveService {
     // });
     // const gameService: GameService = injector.get(GameService);
     // this.gameService = gameService;
-    this.init();
+    // this.init();
   }
 
   public static debugPrint(msg: any) {
@@ -43,7 +45,26 @@ export class SocketReceiveService {
     console.log(JSON.stringify(msg, null, 4));
   }
 
-  private init() {
+  private processMessages(msg: IMessage) {
+    switch (msg.type) {
+        case SocketIoSendTypes.StartGame:
+          this.startGameSuccessResponse(msg);
+        break;
+
+        default:
+          console.error('unknown-message');
+          console.error(JSON.stringify(msg, null, 4));
+          break;
+    }
+  }
+
+  public init() {
+    this.webSocketService
+    .registerReceive()
+    .pipe(tap(this.processMessages.bind(this)))
+    .subscribe();
+
+
     // this.socketService
     // .registerReceive(SocketIoSendTypes.StartGame)
     // .pipe(tap(this.startGameSuccessResponse.bind(this)))

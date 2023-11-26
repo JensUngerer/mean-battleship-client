@@ -139,18 +139,18 @@ export class SocketService implements OnDestroy {
   //   // return throttledDataStream;
   // }
 
-  public registerReceive(receiveId: string): Observable<any> {
-    const receiver = new SocketIoSubscriptionMappingReceiver(this.socket);
-    this.receiveIdObservableMapping[receiveId] = receiver;
-    return receiver.onReceive(receiveId);
-  }
+  // public registerReceive(receiveId: string): Observable<any> {
+  //   const receiver = new SocketIoSubscriptionMappingReceiver(this.socket);
+  //   this.receiveIdObservableMapping[receiveId] = receiver;
+  //   return receiver.onReceive(receiveId);
+  // }
 
-  public registerSend<T extends IMessage>(sendId: string) {
-    // sendData.subscribe((data: IMessage) => {
-    //   this.socket.emit(sendId, data);
-    // });
-    const sender = new SocketIoSubscriptionMappingSender(this.socket);
-    this.sendIdObservableMapping[sendId] = sender;
-    return sender.onSend<T>(sendId);
-  }
+  // public registerSend<T extends IMessage>(sendId: string) {
+  //   // sendData.subscribe((data: IMessage) => {
+  //   //   this.socket.emit(sendId, data);
+  //   // });
+  //   const sender = new SocketIoSubscriptionMappingSender(this.socket);
+  //   this.sendIdObservableMapping[sendId] = sender;
+  //   return sender.onSend<T>(sendId);
+  // }
 }

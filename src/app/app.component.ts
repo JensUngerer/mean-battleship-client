@@ -2,6 +2,7 @@ import { SocketSendService } from './logic/communication/sendService/socket-send
 import { SocketReceiveService } from './logic/communication/receiveService/socket-receive.service';
 import { Component, Inject } from '@angular/core';
 import { SocketService } from './logic/communication/socketService/socket.service';
+import { WebSocketService } from './web-socket.service';
 
 @Component({
   selector: 'bs-root',
@@ -10,11 +11,19 @@ import { SocketService } from './logic/communication/socketService/socket.servic
 })
 export class AppComponent {
   constructor(
+    @Inject(WebSocketService)
+    private webSocketService : WebSocketService,
     @Inject(SocketReceiveService)
     private socketReceiveService: SocketReceiveService,
     @Inject(SocketSendService) private socketSendService: SocketSendService,
-    @Inject(SocketService) private socketService: SocketService,
+    // @Inject(SocketService) private socketService: SocketService,
   ) {
+    const initPromise = this.webSocketService.init();
+    initPromise.then(() => {
+          this.socketReceiveService.init();
+          this.socketSendService.init();
+    });
+
   }
 }
 
