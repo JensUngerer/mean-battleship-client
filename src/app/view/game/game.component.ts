@@ -3,6 +3,7 @@ import { GameService } from './../../logic/game/game.service';
 import { Tile } from './../../logic/tile/tile';
 import { Component, OnInit, Output, Inject } from '@angular/core';
 import { Ship } from 'src/app/logic/ship/ship';
+import { ITileCoordinates } from './../../../../../common/src/tileCoordinates/iTileCoordinates'
 
 @Component({
   selector: 'bs-game',
@@ -14,6 +15,14 @@ import { Ship } from 'src/app/logic/ship/ship';
   ]
 })
 export class GameComponent implements OnInit {
+
+  public onFired(coordinates: ITileCoordinates) {
+    if (!coordinates) {
+      console.error('there are no coordindates');
+      return;
+    }
+    this.gameService.onFired(coordinates);
+  }
 
   constructor(
     public gameService: GameService,

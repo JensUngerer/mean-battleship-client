@@ -3,4 +3,4 @@
 <bs-field [gameState]="gameService.gameState$ | async" [caption]="'YOUR FIELD'" [tiles]="gameService.domesticTiles$ | async" [isDomesticField]="true"></bs-field>
 <br>
 <!-- adversarial field-->
-<bs-field [gameState]="gameService.gameState$ | async" (fired)="gameService.onFired($event)" [caption]="'ENEMY FIELD'" [tiles]="gameService.adversarialTiles$ | async" [isDomesticField]="false"></bs-field>
+<bs-field [gameState]="gameService.gameState$ | async" (fired)="onFired($event)" [caption]="'ENEMY FIELD'" [tiles]="gameService.adversarialTiles$ | async" [isDomesticField]="false"></bs-field>

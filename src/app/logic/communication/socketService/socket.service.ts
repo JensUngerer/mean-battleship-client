@@ -75,7 +75,7 @@ export class SocketIoSubscriptionMappingReceiver {
   providedIn: 'root'
 })
 export class SocketService implements OnDestroy {
-  public static userId: string;
+  // public static userId: string;
   private socket: any;
   private receiveIdObservableMapping: { [key: string]: SocketIoSubscriptionMappingReceiver } = {};
   private sendIdObservableMapping: { [key: string]: SocketIoSubscriptionMappingSender } = {};
@@ -83,7 +83,7 @@ export class SocketService implements OnDestroy {
 
   constructor() {
     // this.socket = io((ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT)); // io.connect(ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT);
-    SocketService.userId = v4();
+    // SocketService.userId = v4();
   }
 
   ngOnDestroy(): void {

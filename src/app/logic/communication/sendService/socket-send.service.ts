@@ -38,25 +38,29 @@ export class SocketSendService {
       type: SocketIoSendTypes.StartGame,
       sourceUserId: WebSocketService.userId
     };
-    this.webSocketSubject.next(msg);
+    if (!this.webSocketSubject) {
+      console.error('cannot start game');
+      return;
+    }
+    this.webSocketSubject?.next(msg);
   }
 
   public coordinates(coordinates: ITileCoordinates) {
     const msg: ICoordinatesMessage = {
       type: SocketIoSendTypes.Coordinates,
-      sourceUserId: SocketService.userId,
+      sourceUserId: WebSocketService.userId,
       coordinates: {
         rowIndex: coordinates.rowIndex,
         columnIndex: coordinates.columnIndex
       }
     };
-    this.webSocketSubject.next(msg);
+    this.webSocketSubject?.next(msg);
   }
 
   public tileState(newDomesticTileState: IDomesticTileState) {
     const msg: ITileStateMessage = {
       type: SocketIoSendTypes.TileState,
-      sourceUserId: SocketService.userId,
+      sourceUserId: WebSocketService.userId,
       coordinates: {
         rowIndex: newDomesticTileState.rowIndex,
         columnIndex: newDomesticTileState.columnIndex
@@ -66,27 +70,27 @@ export class SocketSendService {
       isEndTile: newDomesticTileState.isEndTile,
       isHorizontal: newDomesticTileState.isHorizontal
     };
-    this.webSocketSubject.next(msg);
+    this.webSocketSubject?.next(msg);
   }
 
   // public remainingTileState(msg: ITileStateMessage) {
   //   // const msg: ITileStateMessage = {
   //   //   type: action.type,
-  //   //   sourceUserId: CommunicationSocketService.userId,
+  //   //   sourceUserId: CommunicationWebSocketService.userId,
   //   //   coordinates: {
   //   //     rowIndex: action.payload.rowIndex,
   //   //     columnIndex: action.payload.columnIndex
   //   //   },
   //   //   tileState: action.payload.tileState,
   //   // };
-  //   this.webSocketSubject.next(msg);
+  //   this.webSocketSubject?.next(msg);
   // }
 
   public gameWon() {
     const msg: IMessage = {
-      sourceUserId: SocketService.userId,
+      sourceUserId: WebSocketService.userId,
       type: SocketIoSendTypes.GameWon
     };
-    this.webSocketSubject.next(msg);
+    this.webSocketSubject?.next(msg);
   }
 }

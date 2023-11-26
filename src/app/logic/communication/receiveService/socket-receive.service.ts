@@ -41,7 +41,7 @@ export class SocketReceiveService {
   }
 
   public static debugPrint(msg: any) {
-    console.log('userId:' + SocketService.userId);
+    console.log('userId:' + WebSocketService.userId);
     console.log(JSON.stringify(msg, null, 4));
   }
 
@@ -52,6 +52,7 @@ export class SocketReceiveService {
         break;
       case SocketIoReceiveTypes.BeginningUser:
         this.beginningUser(msg);
+        break;
       case SocketIoReceiveTypes.Coordinates:
         const castedMsg: ICoordinatesMessage = msg as ICoordinatesMessage;
         this.coordinates(castedMsg);
@@ -60,12 +61,12 @@ export class SocketReceiveService {
         const casteTileStatedMsg: ITileStateMessage = msg as ITileStateMessage;
         this.tileState(casteTileStatedMsg);
         break;
-        case SocketIoSendTypes.RemainingTileState:
-          this.remainingTileState(msg);
+      case SocketIoSendTypes.RemainingTileState:
+        this.remainingTileState(msg);
         break;
-        case SocketIoReceiveTypes.GameWon:
+      case SocketIoReceiveTypes.GameWon:
         this.gameWon(msg);
-      break;
+        break;
       default:
         console.error('unknown-message');
         console.error(JSON.stringify(msg, null, 4));
