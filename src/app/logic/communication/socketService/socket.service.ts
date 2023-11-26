@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import  io from 'socket.io-client';
 import { ConfigSocketIo } from './../../../../../../common/src/config/configSocketIo';
 import { v4 } from 'uuid';
 import { IMessage } from './../../../../../../common/src/communication/message/iMessage';
@@ -8,6 +7,7 @@ import { Subject } from 'rxjs';
 import { fromEvent, asyncScheduler } from 'rxjs';
 import { throttle, delay, repeat, throttleTime, tap } from 'rxjs/operators';
 import { SocketIoReceiveTypes } from '../../../../../../common/src/communication/socketIoReceiveTypes';
+import io from 'socket.io-client';
 
 export class SocketIoSubscriptionMappingSender {
   private sendId: string;
@@ -48,6 +48,8 @@ export class SocketIoSubscriptionMappingReceiver {
 
 
   private onReceiveId(data: IMessage) {
+    console.log(data);
+    console.log(JSON.stringify(data));
     this.receiver$.next(data);
   }
 
@@ -80,7 +82,7 @@ export class SocketService implements OnDestroy {
 
 
   constructor() {
-    this.socket = io((ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT)); // io.connect(ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT);
+    // this.socket = io((ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT)); // io.connect(ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT);
     SocketService.userId = v4();
   }
 

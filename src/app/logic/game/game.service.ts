@@ -13,6 +13,10 @@ import { TilesHelperService } from '../tiles-helper/tiles-helper.service';
 import { GameState } from '../../../../../common/src/gameState/game-state.enum';
 import { IMessage } from '../../../../../common/src/communication/message/iMessage';
 import { SocketIoSendTypes } from '../../../../../common/src/communication/socketIoSendTypes';
+import { HttpClient } from '@angular/common/http';
+import { ConfigSocketIo } from '../../../../../common/src/config/configSocketIo';
+import { v4 } from 'uuid';
+import { webSocket } from 'rxjs/webSocket';
 
 // https://stackoverflow.com/questions/55230263/angular-7-injected-service-is-undefined
 @Injectable({
@@ -37,7 +41,8 @@ export class GameService {
     @Inject(SocketSendService)
     private socketSendService: SocketSendService,
     @Inject(DisableBlindTilesService)
-    private disableBlindTilesService) {
+    private disableBlindTilesService,
+    private httpClient: HttpClient) {
   }
 
   public initialize(filedSize: number, shipSizes: number[]) {
@@ -67,7 +72,28 @@ export class GameService {
       this.disableBlindTilesService.disableBlindTiles(currentAdversarialTiles);
       this.internalAdversarialTiles$.next(currentAdversarialTiles);
 
-      this.socketSendService.startGame();
+
+      const initWebsocketPromise: Promise<any> = this.initWebsocketConnection();
+      initWebsocketPromise.then((response: any) => {
+        console.log(JSON.stringify(response, null, 4));
+        const connectionPort = response.port;
+        // https://rxjs.dev/api/webSocket/webSocket
+        const url = ConfigSocketIo.SOCKET_IO_SERVER_URL_WS + ':' + connectionPort;
+        const subject = webSocket({url: url, protocol: 'websocket'});
+        subject.subscribe({
+          next: (message) => {
+            console.log(JSON.stringify(message));
+          }
+        });
+        subject.next('ping');
+
+      });
+      initWebsocketPromise.catch((error: any) => {
+        console.log(JSON.stringify(error, null, 4));
+      });
+
+
+      //this.socketSendService.startGame();
     } else {
       this.internalShips$.next([]);
       this.internalDomesticTiles$.next([]);
@@ -76,6 +102,14 @@ export class GameService {
 
       // alert('initialization error - please, refresh browser-window (F5)');
     }
+  }
+  initWebsocketConnection(): Promise<any> {
+    const userId = SocketService.userId;
+    const url = ConfigSocketIo.SOCKET_IO_SERVER_URL + ':' + ConfigSocketIo.PORT + '/' + ConfigSocketIo.API_PATH + '/' + ConfigSocketIo.CONNECTION_PATH;
+    return this.httpClient.post(url,
+       {
+        userId: userId
+       }).toPromise();
   }
 
   public setBeginningUser() {

@@ -6,6 +6,8 @@ import { IMessage } from '../../../../../../common/src/communication/message/iMe
 import { ITileCoordinates } from '../../../../../../common/src/tileCoordinates/iTileCoordinates';
 import { ICoordinatesMessage } from '../../../../../../common/src/communication/message/iCoordinatesMessage';
 import { ITileStateMessage } from '../../../../../../common/src/communication/message/iTileStateMessage';
+import { SocketIoSendTypes } from '../../../../../../common/src/communication/socketIoSendTypes';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -42,27 +44,38 @@ export class SocketReceiveService {
   }
 
   private init() {
-    this.socketService
-      .registerReceive(SocketIoReceiveTypes.BeginningUser)
-      .subscribe(this.beginningUser.bind(this));
+    // this.socketService
+    // .registerReceive(SocketIoSendTypes.StartGame)
+    // .pipe(tap(this.startGameSuccessResponse.bind(this)))
+    // .subscribe();
 
-    this.socketService
-      .registerReceive(SocketIoReceiveTypes.Coordinates)
-      .subscribe(this.coordinates.bind(this));
+    // this.socketService
+    //   .registerReceive(SocketIoReceiveTypes.BeginningUser)
+    //   .pipe(tap(this.beginningUser.bind(this)))
+    //   .subscribe();
 
-    this.socketService
-      .registerReceive(SocketIoReceiveTypes.TileState)
-      .subscribe(this.tileState.bind(this));
+    // this.socketService
+    //   .registerReceive(SocketIoReceiveTypes.Coordinates)
+    //   .subscribe(this.coordinates.bind(this));
+
+    // this.socketService
+    //   .registerReceive(SocketIoReceiveTypes.TileState)
+    //   .subscribe(this.tileState.bind(this));
 
 
-    this.socketService
-      .registerReceive(SocketIoReceiveTypes.RemainingTileState)
-      .subscribe(this.remainingTileState.bind(this));
+    // this.socketService
+    //   .registerReceive(SocketIoReceiveTypes.RemainingTileState)
+    //   .subscribe(this.remainingTileState.bind(this));
 
 
-    this.socketService
-      .registerReceive(SocketIoReceiveTypes.GameWon)
-      .subscribe(this.gameWon.bind(this));
+    // this.socketService
+    //   .registerReceive(SocketIoReceiveTypes.GameWon)
+    //   .subscribe(this.gameWon.bind(this));
+  }
+
+  private startGameSuccessResponse(jsonrpcMsg: any) {
+    console.log(jsonrpcMsg);
+    console.log(JSON.stringify(jsonrpcMsg, null, 4));
   }
 
   private beginningUser(msg: IMessage) {

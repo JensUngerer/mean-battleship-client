@@ -23,11 +23,11 @@ export class SocketSendService {
   }
 
   private init() {
-    this.startGame$ = this.socketService.registerSend<IMessage>(SocketIoSendTypes.StartGame);
-    this.coordinates$ = this.socketService.registerSend<ICoordinatesMessage>(SocketIoSendTypes.Coordinates);
-    this.tileState$ = this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.TileState);
-    this.remainingTileState$ = this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.RemainingTileState);
-    this.gameWon$ = this.socketService.registerSend<IMessage>(SocketIoSendTypes.GameWon);
+  //   this.startGame$ = this.socketService.registerSend<IMessage>(SocketIoSendTypes.StartGame);
+  //   this.coordinates$ = this.socketService.registerSend<ICoordinatesMessage>(SocketIoSendTypes.Coordinates);
+  //   this.tileState$ = this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.TileState);
+  //   this.remainingTileState$ = this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.RemainingTileState);
+  //   this.gameWon$ = this.socketService.registerSend<IMessage>(SocketIoSendTypes.GameWon);
   }
 
   public startGame() {
