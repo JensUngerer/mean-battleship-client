@@ -67,12 +67,16 @@ export class SocketReceiveService {
       case SocketIoReceiveTypes.GameWon:
         this.gameWon(msg);
         break;
+      case SocketIoReceiveTypes.GameLost:
+        this.gameLost(msg);
+        break;
       default:
         console.error('unknown-message');
         console.error(JSON.stringify(msg, null, 4));
         break;
     }
   }
+
 
   public init() {
     this.webSocketService
@@ -109,6 +113,12 @@ export class SocketReceiveService {
     //   .registerReceive(SocketIoReceiveTypes.GameWon)
     //   .subscribe(this.gameWon.bind(this));
   }
+
+
+  gameLost(msg: IMessage) {
+    this.gameService.receiveGameLost();
+  }
+
 
   private startGameSuccessResponse(jsonrpcMsg: any) {
     console.log(jsonrpcMsg);

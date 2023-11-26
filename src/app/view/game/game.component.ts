@@ -28,7 +28,7 @@ export class GameComponent implements OnInit {
     public gameService: GameService,
     public currentGameStateService: CurrentGameStateService
   ) {
-    this.gameService.initialize(5, [2, 1]);
+    this.gameService.initialize(7, [2, 1]);
   }
 
   ngOnInit() { }

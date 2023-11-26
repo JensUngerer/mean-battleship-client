@@ -25,6 +25,7 @@ import { SocketReceiveService } from '../communication/receiveService/socket-rec
   providedIn: 'root'
 })
 export class GameService {
+
   private internalDomesticTiles$: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
   private internalAdversarialTiles$: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
   private internalShips$: BehaviorSubject<Ship[]> = new BehaviorSubject<Ship[]>([]);
@@ -149,6 +150,10 @@ export class GameService {
     this.sendTileState(coordinates);
 
     // the incoming coordinates have just been processed -> so its now her / his turn
+    if (this.internalGameState$.value == GameState.GameLost) {
+      console.log('do not change state at it has already been lost');
+      return;
+    }
     this.internalGameState$.next(GameState.Turn);
   }
 
@@ -219,6 +224,11 @@ export class GameService {
         }
       }
     }
+  }
+
+  receiveGameLost() {
+    this.internalGameState$.next(GameState.GameLost);
+    this.internalGameState$.complete();
   }
 
 
