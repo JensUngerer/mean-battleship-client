@@ -9,6 +9,11 @@ import { ITileStateMessage } from '../../../../../../common/src/communication/me
 import { SocketIoSendTypes } from '../../../../../../common/src/communication/socketIoSendTypes';
 import { tap } from 'rxjs/operators';
 import { WebSocketService } from 'src/app/web-socket.service';
+import { ICommunicationContainer } from '../../../../../../common/src/communication/message/iCommunicationContainer';
+import { CommunicationType } from '../../../../../../common/src/communication/communicationType';
+import jsonrpc, { RequestObject } from 'jsonrpc-lite';
+import { ITileStateContainer } from '../../../../../../common/src/communication/message/ITileStateContainer';
+import { ICoordinatesContainer } from '../../../../../../common/src/communication/message/iCoordinatesContainer';
 
 @Injectable({
   providedIn: 'root'
@@ -45,34 +50,39 @@ export class SocketReceiveService {
     console.log(JSON.stringify(msg, null, 4));
   }
 
-  private processMessages(msg: IMessage) {
-    switch (msg.type) {
-      case SocketIoSendTypes.StartGame:
-        this.startGameSuccessResponse(msg);
+  private processMessages(msg: any) {
+    const parsed = jsonrpc.parseObject(msg);
+    const containerRaw: RequestObject = parsed.payload as RequestObject;
+    const container : ICommunicationContainer = containerRaw as unknown as ICommunicationContainer;
+       
+    switch (container.type) {
+      case CommunicationType.AddUser:
+        this.startGameSuccessResponse(container);
         break;
-      case SocketIoReceiveTypes.BeginningUser:
-        this.beginningUser(msg);
+      case CommunicationType.BeginningUser:
+        this.beginningUser(container);
         break;
-      case SocketIoReceiveTypes.Coordinates:
-        const castedMsg: ICoordinatesMessage = msg as ICoordinatesMessage;
+      case CommunicationType.Coordinates:
+        const castedMsg: ICoordinatesContainer = container as ICoordinatesContainer;
         this.coordinates(castedMsg);
         break;
-      case SocketIoReceiveTypes.TileState:
-        const casteTileStatedMsg: ITileStateMessage = msg as ITileStateMessage;
+      case CommunicationType.TileState:
+        const casteTileStatedMsg: ITileStateContainer = container as ITileStateContainer;
         this.tileState(casteTileStatedMsg);
         break;
-      case SocketIoSendTypes.RemainingTileState:
-        this.remainingTileState(msg);
+      case CommunicationType.RemainingTileState:
+        // this.remainingTileState(container);
+        console.error('unknown logic:'+ container.type);
         break;
-      case SocketIoReceiveTypes.GameWon:
-        this.gameWon(msg);
+      case CommunicationType.GameWon:
+        this.gameWon(container);
         break;
-      case SocketIoReceiveTypes.GameLost:
-        this.gameLost(msg);
+      case CommunicationType.GameLost:
+        this.gameLost(container);
         break;
       default:
         console.error('unknown-message');
-        console.error(JSON.stringify(msg, null, 4));
+        console.error(JSON.stringify(container, null, 4));
         break;
     }
   }
@@ -115,7 +125,7 @@ export class SocketReceiveService {
   }
 
 
-  gameLost(msg: IMessage) {
+  gameLost(msg: ICommunicationContainer) {
     this.gameService.receiveGameLost();
   }
 
@@ -125,19 +135,16 @@ export class SocketReceiveService {
     console.log(JSON.stringify(jsonrpcMsg, null, 4));
   }
 
-  private beginningUser(msg: IMessage) {
-    if (msg.type === SocketIoReceiveTypes.InitialValue) {
-      return;
-    }
+  private beginningUser(msg: ICommunicationContainer) {
     SocketReceiveService.debugPrint(msg);
 
     this.gameService.setBeginningUser();
   }
 
-  private coordinates(msg: ICoordinatesMessage) {
-    if (msg.type === SocketIoReceiveTypes.InitialValue) {
-      return;
-    }
+  private coordinates(msg: ICoordinatesContainer) {
+    // if (msg.type === SocketIoReceiveTypes.InitialValue) {
+    //   return;
+    // }
 
     SocketReceiveService.debugPrint(msg);
 
@@ -149,11 +156,7 @@ export class SocketReceiveService {
     this.gameService.receiveCoordinates(coordinates);
   }
 
-  private tileState(msg: ITileStateMessage) {
-    if (msg.type === SocketIoReceiveTypes.InitialValue) {
-      return;
-    }
-
+  private tileState(msg: ITileStateContainer) {
     // DEBUGGING:
     SocketReceiveService.debugPrint(msg);
 
@@ -164,21 +167,7 @@ export class SocketReceiveService {
     this.gameService.receiveTileState(coordinates, msg.tileState);
   }
 
-  private remainingTileState(msg: any) {
-    if (msg.type === SocketIoReceiveTypes.InitialValue) {
-      return;
-    }
-
-    SocketReceiveService.debugPrint(msg);
-
-    // TODO: why is there no logic?
-  }
-
   private gameWon(msg: any) {
-    if (msg.type === SocketIoReceiveTypes.InitialValue) {
-      return;
-    }
-
     SocketReceiveService.debugPrint(msg);
 
     this.gameService.receiveGameWon();
