@@ -40,24 +40,19 @@ export class GameService {
     private tileGeneratorService: TileGeneratorService,
     @Inject(ShipGeneratorService)
     private shipGeneratorService: ShipGeneratorService,
-    //  @Inject(TileTransitionService)
-    // private tileTransitionService: TileTransitionService,
     @Inject(SocketSendService)
     private socketSendService: SocketSendService,
-    // private socketReceiveService: SocketReceiveService,
     @Inject(DisableBlindTilesService)
     private disableBlindTilesService,
-    // private webocketService: WebSocketService
   ) {
   }
 
   private disableUi(newGameState: GameState) {
-    console.log('newGameState:'+ newGameState);
+    // DEBUGGING:
+    // console.log('newGameState:'+ newGameState);
     switch (newGameState) {
       case GameState.Turn:
-        console.log('trying to set isUiBlocked');
         this.isUiBlocked$.next(false);
-        console.log('set isUiState to false');
         break;
       case GameState.GameLost:
         this.isUiBlocked$.next(true);

@@ -35,7 +35,8 @@ export class WebSocketService {
     // https://stackoverflow.com/questions/35546421/how-to-get-a-variable-type-in-typescript
     if (msg instanceof RequestObject){
       this.isUiBlocked$.next(true);
-      console.log('sent:'+ msg.serialize());
+      // DEBUGGIN:
+      // console.log('sent:'+ msg.serialize());
     } 
   }
 

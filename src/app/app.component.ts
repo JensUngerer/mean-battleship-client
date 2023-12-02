@@ -40,7 +40,8 @@ export class AppComponent implements OnInit, OnDestroy {
   public isUiBlocked = false;
 
   private handleIsUiBlocked(newValue: boolean) {
-    console.log(this.isUiBlocked$.value + '-' + this.isUiBlockedByGameState$.value);
+    // DEBUGGING: show current state
+    // console.log(this.isUiBlocked$.value + '-' + this.isUiBlockedByGameState$.value);
     this.isUiBlocked = this.isUiBlocked$.value /*|| this.isUiBlockedByGameState$.value;*/
   }
 
