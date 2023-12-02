@@ -141,7 +141,7 @@ export class SocketReceiveService {
   }
 
   private beginningUser(msg: ICommunicationContainer) {
-    SocketReceiveService.debugPrint(msg);
+    // SocketReceiveService.debugPrint(msg);
 
     this.gameService.setBeginningUser();
   }
@@ -151,7 +151,7 @@ export class SocketReceiveService {
     //   return;
     // }
 
-    SocketReceiveService.debugPrint(msg);
+    // SocketReceiveService.debugPrint(msg);
 
     const coordinates: ITileCoordinates = {
       rowIndex: msg.coordinates.rowIndex,
@@ -163,7 +163,7 @@ export class SocketReceiveService {
 
   private tileState(msg: ITileStateContainer) {
     // DEBUGGING:
-    SocketReceiveService.debugPrint(msg);
+    // SocketReceiveService.debugPrint(msg);
 
     const coordinates: ITileCoordinates = {
       rowIndex: msg.coordinates.rowIndex,
@@ -173,7 +173,7 @@ export class SocketReceiveService {
   }
 
   private gameWon(msg: any) {
-    SocketReceiveService.debugPrint(msg);
+    // SocketReceiveService.debugPrint(msg);
 
     this.gameService.receiveGameWon();
   }

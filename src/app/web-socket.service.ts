@@ -39,7 +39,7 @@ export class WebSocketService {
     const initWebsocketPromise: Promise<any> = this.requestConnectionWithRandomPort();
     initWebsocketPromise.then((response: any) => {
       // DEBUGGING: show response with randomPort
-      console.log(JSON.stringify(response, null, 4));
+      // console.log(JSON.stringify(response, null, 4));
 
       const connectionPort = response.port;
       // https://rxjs.dev/api/webSocket/webSocket
@@ -49,7 +49,8 @@ export class WebSocketService {
           url: url, 
           protocol: 'websocket' ,
           serializer: (msg) =>{
-            console.log('after serialization:' + msg);
+            // DEBUGGING:
+            // console.log('after serialization:' + msg);
             return msg; 
           },
           // deserializer: (msg) => {
