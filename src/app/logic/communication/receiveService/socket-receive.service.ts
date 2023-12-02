@@ -62,11 +62,16 @@ export class SocketReceiveService {
     }
     if (jsonRpcParsed.type === 'success') {
       // do not disable / enable while message is running?
-      // setTimeout(()=> {
-      //   console.log('success:' + JSON.stringify(jsonRpcParsed, null, 4));
-      //   this.isUiBlocked$.next(false);
-      // }, 4 * 1000);
-      this.isUiBlocked$.next(false);
+      setTimeout(()=> {
+        // console.log('success:' + JSON.stringify(jsonRpcParsed, null, 4));
+        
+        // APPROACH-ONE: some dealy to show communication is running
+        this.isUiBlocked$.next(false);
+      }, 500);
+
+      // APPROACH-TWO: no delay
+      // this.isUiBlocked$.next(false);
+      
       return;
     }
     const requestObject = jsonRpcParsed.payload as RequestObject;

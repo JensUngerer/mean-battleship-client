@@ -20,7 +20,6 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(SocketReceiveService)
     private socketReceiveService: SocketReceiveService,
     @Inject(SocketSendService) private socketSendService: SocketSendService,
-    // @Inject(SocketService) private socketService: SocketService,
   ) {
   }
 
@@ -42,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private handleIsUiBlocked(newValue: boolean) {
     console.log(this.isUiBlocked$.value + '-' + this.isUiBlockedByGameState$.value);
-    this.isUiBlocked = this.isUiBlocked$.value || this.isUiBlockedByGameState$.value;
+    this.isUiBlocked = this.isUiBlocked$.value /*|| this.isUiBlockedByGameState$.value;*/
   }
 
 
