@@ -1,6 +1,6 @@
 import { DisableBlindTilesService } from './../disableBlindTiles/disable-blind-tiles.service';
 import { SocketService } from './../communication/socketService/socket.service';
-import { Observable, Subject, BehaviorSubject, Subscriber, Subscription } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, Subscriber, Subscription, defer } from 'rxjs';
 import { SocketSendService } from './../communication/sendService/socket-send.service';
 import { TileGeneratorService } from './../tileGenerator/tile-generator.service';
 import { Injectable, Inject } from '@angular/core';
@@ -19,13 +19,14 @@ import { v4 } from 'uuid';
 import { webSocket } from 'rxjs/webSocket';
 import { WebSocketService } from 'src/app/web-socket.service';
 import { SocketReceiveService } from '../communication/receiveService/socket-receive.service';
+import { tap } from 'rxjs/internal/operators/tap';
 
 // https://stackoverflow.com/questions/55230263/angular-7-injected-service-is-undefined
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-
+  private isUiBlocked$: BehaviorSubject<boolean>;
   private internalDomesticTiles$: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
   private internalAdversarialTiles$: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
   private internalShips$: BehaviorSubject<Ship[]> = new BehaviorSubject<Ship[]>([]);
@@ -47,7 +48,37 @@ export class GameService {
     @Inject(DisableBlindTilesService)
     private disableBlindTilesService,
     // private webocketService: WebSocketService
-    ) {
+  ) {
+  }
+
+  private disableUi(newGameState: GameState) {
+    switch (newGameState) {
+      case GameState.Turn:
+        this.isUiBlocked$.next(false);
+        break;
+      case GameState.GameLost:
+        this.isUiBlocked$.next(true);
+        break;
+      case GameState.GameNotStarted:
+        this.isUiBlocked$.next(false);
+        break;
+      case GameState.GameWon:
+        this.isUiBlocked$.next(true);
+        break;
+      case GameState.InitializationError:
+        this.isUiBlocked$.next(false);
+        break;
+      case GameState.NotTurn:
+        this.isUiBlocked$.next(true);
+        break;
+      default:
+        break;
+    }
+  }
+
+  public setIsUiBlocked(isUiBlocked$: BehaviorSubject<boolean>) {
+    this.isUiBlocked$ = isUiBlocked$;
+    this.internalGameState$.pipe(tap(this.disableUi.bind(this))).subscribe();
   }
 
   public initialize(filedSize: number, shipSizes: number[]) {
@@ -78,7 +109,7 @@ export class GameService {
       this.internalAdversarialTiles$.next(currentAdversarialTiles);
 
       // this.webocketService.init();
-      
+
       this.socketSendService.startGame();
     } else {
       this.internalShips$.next([]);
