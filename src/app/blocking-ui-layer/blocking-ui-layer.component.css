@@ -12,6 +12,7 @@
     flex: 1 1 100%;
     justify-content: center;
     align-items: center;
+    pointer-events: none;
 }
 
 .disabled-overlay {
@@ -19,6 +20,6 @@
     flex: 1 1 100%;
     align-items: center;
     justify-content: center;
-    font-size: xx-large;
+    font-size: 10vw;
     font-weight: 900;
 }
