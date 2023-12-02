@@ -59,7 +59,7 @@ export class SocketReceiveService {
       return;
     }
     if (jsonRpcParsed.type === 'success') {
-      console.log('success:' + JSON.stringify(jsonRpcParsed, null, 4));
+      // console.log('success:' + JSON.stringify(jsonRpcParsed, null, 4));
       return;
     }
     const requestObject = jsonRpcParsed.payload as RequestObject;
