@@ -15,11 +15,13 @@ import jsonrpc, { IParsedObject, RequestObject, SuccessObject } from 'jsonrpc-li
 import { ITileStateContainer } from '../../../../../../common/src/communication/message/ITileStateContainer';
 import { ICoordinatesContainer } from '../../../../../../common/src/communication/message/iCoordinatesContainer';
 import { CommunicationMethod } from '../../../../../../common/src/communication/communicationMethod';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketReceiveService {
+  private isUiBlocked$: BehaviorSubject<boolean>;
 
   constructor(@Inject(SocketService)
   @Inject(WebSocketService)
@@ -59,7 +61,10 @@ export class SocketReceiveService {
       return;
     }
     if (jsonRpcParsed.type === 'success') {
-      // console.log('success:' + JSON.stringify(jsonRpcParsed, null, 4));
+      setTimeout(()=> {
+        console.log('success:' + JSON.stringify(jsonRpcParsed, null, 4));
+        this.isUiBlocked$.next(false);
+      }, 4 * 1000);
       return;
     }
     const requestObject = jsonRpcParsed.payload as RequestObject;
@@ -102,7 +107,8 @@ export class SocketReceiveService {
   }
 
 
-  public init() {
+  public init(isUiBlocked$: BehaviorSubject<boolean>) {
+    this.isUiBlocked$ = isUiBlocked$;
     this.webSocketService
       .registerReceive()
       .pipe(tap(this.processMessages.bind(this)))

@@ -26,13 +26,13 @@ export class SocketSendService {
   // private remainingTileState$: Subject<ITileStateMessage> = null;// new Subject<ITileStateMessage>();
   // private gameWon$: Subject<IMessage> = null; // new Subject<IMessage>();
 
-  private webSocketSubject : Subject<any>;
-  constructor() {
+  // private webSocketSubject : Subject<any>;
+  constructor(private webSocketService: WebSocketService,) {
     // this.init();
   }
 
   public init(webSocketSubject: Subject<any>) {
-    this.webSocketSubject = webSocketSubject;
+    // this.webSocketSubject = webSocketSubject;
   //   this.startGame$ = this.socketService.registerSend<IMessage>(SocketIoSendTypes.StartGame);
   //   this.coordinates$ = this.socketService.registerSend<ICoordinatesMessage>(SocketIoSendTypes.Coordinates);
   //   this.tileState$ = this.socketService.registerSend<ITileStateMessage>(SocketIoSendTypes.TileState);
@@ -50,11 +50,8 @@ export class SocketSendService {
       sourceUserId: WebSocketService.userId,
     };
     const msg = jsonrpc.request(v4(), CommunicationMethod.Post, container);
-    if (!this.webSocketSubject) {
-      console.error('cannot start game');
-      return;
-    }
-    this.webSocketSubject?.next(msg.serialize());
+
+    this.webSocketService.send(msg);
   }
 
   public coordinates(coordinates: ITileCoordinates) {
@@ -75,7 +72,7 @@ export class SocketSendService {
       }
     };
     const msg = jsonrpc.request(v4(), CommunicationMethod.Post, container);
-    this.webSocketSubject?.next(msg.serialize());
+    this.webSocketService.send(msg);
   }
 
   public tileState(newDomesticTileState: IDomesticTileState) {
@@ -104,7 +101,7 @@ export class SocketSendService {
       isHorizontal: newDomesticTileState.isHorizontal
     };
     const msg = jsonrpc.request(v4(), CommunicationMethod.Post, container);
-    this.webSocketSubject?.next(msg.serialize());
+    this.webSocketService.send(msg);
   }
 
   // public remainingTileState(msg: ITileStateMessage) {
@@ -117,7 +114,7 @@ export class SocketSendService {
   //   //   },
   //   //   tileState: action.payload.tileState,
   //   // };
-  //   this.webSocketSubject?.next(msg);
+  //   this.webSocketService.send(msg);
   // }
 
   public gameWon() {
@@ -130,6 +127,6 @@ export class SocketSendService {
       sourceUserId: WebSocketService.userId,
     };
     const msg = jsonrpc.request(v4(), CommunicationMethod.Post, container);
-    this.webSocketSubject?.next(msg.serialize());
+    this.webSocketService.send(msg);
   }
 }

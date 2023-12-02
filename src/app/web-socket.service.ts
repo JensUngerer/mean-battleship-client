@@ -1,19 +1,17 @@
-import { Injectable } from '@angular/core';
-import { ConfigSocketIo } from '../../../common/src/config/configSocketIo';
 import { HttpClient } from '@angular/common/http';
-import { v4 } from 'uuid';
-import { webSocket } from 'rxjs/webSocket';
-import { Subject } from 'rxjs';
-import { SocketSendService } from './logic/communication/sendService/socket-send.service';
-import { SocketReceiveService } from './logic/communication/receiveService/socket-receive.service';
-import { ICommunicationContainer } from '../../../common/src/communication/message/iCommunicationContainer';
+import { Injectable } from '@angular/core';
 import { RequestObject, SuccessObject } from 'jsonrpc-lite';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { webSocket } from 'rxjs/webSocket';
+import { v4 } from 'uuid';
+import { ConfigSocketIo } from '../../../common/src/config/configSocketIo';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebSocketService {
 
+  private isUiBlocked$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
   private webSocketConnection = new Subject<any>();
 
   public static userId = v4();
@@ -39,51 +37,54 @@ export class WebSocketService {
 
   public send(msg: SuccessObject | RequestObject) {
     this.webSocketConnection.next(msg.serialize());
+    // https://stackoverflow.com/questions/35546421/how-to-get-a-variable-type-in-typescript
+    if (msg instanceof RequestObject){
+      this.isUiBlocked$.next(true);
+      console.log('sending:'+ msg.serialize());
+    }
   }
 
   public init() {
-    const initWebsocketPromise: Promise<any> = this.requestConnectionWithRandomPort();
-    initWebsocketPromise.then((response: any) => {
-      // DEBUGGING: show response with randomPort
-      // console.log(JSON.stringify(response, null, 4));
+    return new Promise((resovle: (value?: any) => void) => {
+      const initWebsocketPromise: Promise<any> = this.requestConnectionWithRandomPort();
+      initWebsocketPromise.then((response: any) => {
+        // DEBUGGING: show response with randomPort
+        // console.log(JSON.stringify(response, null, 4));
 
-      const connectionPort = response.port;
-      // https://rxjs.dev/api/webSocket/webSocket
-      const url = ConfigSocketIo.SOCKET_IO_SERVER_URL_WS + ':' + connectionPort;
-      this.webSocketConnection = webSocket(
-        { 
-          url: url, 
-          protocol: 'websocket' ,
-          serializer: (msg) =>{
-            // DEBUGGING:
-            // console.log('after serialization:' + msg);
-            return msg; 
-          },
-          // deserializer: (msg) => {
-          //   console.log('after deserialization:' + JSON.stringify(msg, null, 4));
-          //   return msg;
-          // }
-        }
+        const connectionPort = response.port;
+        // https://rxjs.dev/api/webSocket/webSocket
+        const url = ConfigSocketIo.SOCKET_IO_SERVER_URL_WS + ':' + connectionPort;
+        this.webSocketConnection = webSocket(
+          {
+            url: url,
+            protocol: 'websocket',
+            serializer: (msg) => {
+              // DEBUGGING:
+              // console.log('after serialization:' + msg);
+              return msg;
+            },
+            // deserializer: (msg) => {
+            //   console.log('after deserialization:' + JSON.stringify(msg, null, 4));
+            //   return msg;
+            // }
+          }
         );
+        resovle(this.isUiBlocked$);
 
-      // DEBUGING: receiving data
-      // this.webSocketConnection.subscribe({
-      //   next: (message) => {
-      //     console.log(JSON.stringify(message));
-      //   }
-      // });
+        // DEBUGING: receiving data
+        // this.webSocketConnection.subscribe({
+        //   next: (message) => {
+        //     console.log(JSON.stringify(message));
+        //   }
+        // });
 
-      // // sending data
-      // // DEBUGGING: send string message to server
-      // this.webSocketConnection.next('ping');
+        // // sending data
+        // // DEBUGGING: send string message to server
+        // this.webSocketConnection.next('ping');
 
 
+      });
     });
-    initWebsocketPromise.catch((error: any) => {
-      console.log(JSON.stringify(error, null, 4));
-    });
-
-    return initWebsocketPromise;
   }
 
   registerReceive(): Subject<any> {
