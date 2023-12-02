@@ -52,9 +52,12 @@ export class GameService {
   }
 
   private disableUi(newGameState: GameState) {
+    console.log('newGameState:'+ newGameState);
     switch (newGameState) {
       case GameState.Turn:
+        console.log('trying to set isUiBlocked');
         this.isUiBlocked$.next(false);
+        console.log('set isUiState to false');
         break;
       case GameState.GameLost:
         this.isUiBlocked$.next(true);

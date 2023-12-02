@@ -11,7 +11,7 @@ import { ConfigSocketIo } from '../../../common/src/config/configSocketIo';
 })
 export class WebSocketService {
 
-  private isUiBlocked$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
+  private isUiBlocked$: BehaviorSubject<boolean>;
   private webSocketConnection = new Subject<any>();
 
   public static userId = v4();
@@ -20,11 +20,6 @@ export class WebSocketService {
     private httpClient: HttpClient,
   ) {
   }
-
-
-  // getSubject(): Subject<any> {
-  //   return this.webSocketConnection;
-  // }
 
   private requestConnectionWithRandomPort(): Promise<any> {
     const userId = WebSocketService.userId;
@@ -40,11 +35,12 @@ export class WebSocketService {
     // https://stackoverflow.com/questions/35546421/how-to-get-a-variable-type-in-typescript
     if (msg instanceof RequestObject){
       this.isUiBlocked$.next(true);
-      console.log('sending:'+ msg.serialize());
-    }
+      console.log('sent:'+ msg.serialize());
+    } 
   }
 
-  public init() {
+  public init(isUiBlocked$: BehaviorSubject<boolean>) {
+    this.isUiBlocked$ = isUiBlocked$;
     return new Promise((resovle: (value?: any) => void) => {
       const initWebsocketPromise: Promise<any> = this.requestConnectionWithRandomPort();
       initWebsocketPromise.then((response: any) => {
@@ -69,7 +65,7 @@ export class WebSocketService {
             // }
           }
         );
-        resovle(this.isUiBlocked$);
+        resovle();
 
         // DEBUGING: receiving data
         // this.webSocketConnection.subscribe({

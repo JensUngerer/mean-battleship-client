@@ -66,6 +66,7 @@ export class SocketReceiveService {
       //   console.log('success:' + JSON.stringify(jsonRpcParsed, null, 4));
       //   this.isUiBlocked$.next(false);
       // }, 4 * 1000);
+      this.isUiBlocked$.next(false);
       return;
     }
     const requestObject = jsonRpcParsed.payload as RequestObject;
@@ -110,7 +111,6 @@ export class SocketReceiveService {
 
   public init(isUiBlocked$: BehaviorSubject<boolean>) {
     this.isUiBlocked$ = isUiBlocked$;
-    this.gameService.setIsUiBlocked(this.isUiBlocked$);
     this.webSocketService
       .registerReceive()
       .pipe(tap(this.processMessages.bind(this)))
