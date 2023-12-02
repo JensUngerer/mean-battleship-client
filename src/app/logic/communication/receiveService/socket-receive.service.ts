@@ -11,7 +11,7 @@ import { tap } from 'rxjs/operators';
 import { WebSocketService } from 'src/app/web-socket.service';
 import { ICommunicationContainer } from '../../../../../../common/src/communication/message/iCommunicationContainer';
 import { CommunicationType } from '../../../../../../common/src/communication/communicationType';
-import jsonrpc, { RequestObject } from 'jsonrpc-lite';
+import jsonrpc, { IParsedObject, RequestObject } from 'jsonrpc-lite';
 import { ITileStateContainer } from '../../../../../../common/src/communication/message/ITileStateContainer';
 import { ICoordinatesContainer } from '../../../../../../common/src/communication/message/iCoordinatesContainer';
 
@@ -51,38 +51,43 @@ export class SocketReceiveService {
   }
 
   private processMessages(msg: any) {
-    const parsed = jsonrpc.parseObject(msg);
-    const containerRaw: RequestObject = parsed.payload as RequestObject;
-    const container : ICommunicationContainer = containerRaw as unknown as ICommunicationContainer;
-       
-    switch (container.type) {
+    // const parsedMsg = JSON.parse(msg);
+    const jsonRpcParsed = jsonrpc.parseObject(msg) as IParsedObject;;
+    if (jsonRpcParsed.type === 'invalid') {
+        console.error('incoming message is not a valid JSON-RPC - message');
+        return;
+    }
+    const requestObject = jsonRpcParsed.payload as RequestObject;
+    const incomingMessage = requestObject.params as ICommunicationContainer;
+
+    switch (incomingMessage.type) {
       case CommunicationType.AddUser:
-        this.startGameSuccessResponse(container);
+        this.startGameSuccessResponse(incomingMessage);
         break;
       case CommunicationType.BeginningUser:
-        this.beginningUser(container);
+        this.beginningUser(incomingMessage);
         break;
       case CommunicationType.Coordinates:
-        const castedMsg: ICoordinatesContainer = container as ICoordinatesContainer;
+        const castedMsg: ICoordinatesContainer = incomingMessage as ICoordinatesContainer;
         this.coordinates(castedMsg);
         break;
       case CommunicationType.TileState:
-        const casteTileStatedMsg: ITileStateContainer = container as ITileStateContainer;
+        const casteTileStatedMsg: ITileStateContainer = incomingMessage as ITileStateContainer;
         this.tileState(casteTileStatedMsg);
         break;
       case CommunicationType.RemainingTileState:
         // this.remainingTileState(container);
-        console.error('unknown logic:'+ container.type);
+        console.error('unknown logic:'+ incomingMessage.type);
         break;
       case CommunicationType.GameWon:
-        this.gameWon(container);
+        this.gameWon(incomingMessage);
         break;
       case CommunicationType.GameLost:
-        this.gameLost(container);
+        this.gameLost(incomingMessage);
         break;
       default:
         console.error('unknown-message');
-        console.error(JSON.stringify(container, null, 4));
+        console.error(JSON.stringify(incomingMessage, null, 4));
         break;
     }
   }

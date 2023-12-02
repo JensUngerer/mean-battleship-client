@@ -44,7 +44,20 @@ export class WebSocketService {
       const connectionPort = response.port;
       // https://rxjs.dev/api/webSocket/webSocket
       const url = ConfigSocketIo.SOCKET_IO_SERVER_URL_WS + ':' + connectionPort;
-      this.webSocketConnection = webSocket({ url: url, protocol: 'websocket' });
+      this.webSocketConnection = webSocket(
+        { 
+          url: url, 
+          protocol: 'websocket' ,
+          serializer: (msg) =>{
+            console.log('after serialization:' + msg);
+            return msg; 
+          },
+          // deserializer: (msg) => {
+          //   console.log('after deserialization:' + JSON.stringify(msg, null, 4));
+          //   return msg;
+          // }
+        }
+        );
 
       // DEBUGING: receiving data
       // this.webSocketConnection.subscribe({
