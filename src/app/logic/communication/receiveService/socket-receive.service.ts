@@ -11,9 +11,10 @@ import { tap } from 'rxjs/operators';
 import { WebSocketService } from 'src/app/web-socket.service';
 import { ICommunicationContainer } from '../../../../../../common/src/communication/message/iCommunicationContainer';
 import { CommunicationType } from '../../../../../../common/src/communication/communicationType';
-import jsonrpc, { IParsedObject, RequestObject } from 'jsonrpc-lite';
+import jsonrpc, { IParsedObject, RequestObject, SuccessObject } from 'jsonrpc-lite';
 import { ITileStateContainer } from '../../../../../../common/src/communication/message/ITileStateContainer';
 import { ICoordinatesContainer } from '../../../../../../common/src/communication/message/iCoordinatesContainer';
+import { CommunicationMethod } from '../../../../../../common/src/communication/communicationMethod';
 
 @Injectable({
   providedIn: 'root'
@@ -54,15 +55,19 @@ export class SocketReceiveService {
     // const parsedMsg = JSON.parse(msg);
     const jsonRpcParsed = jsonrpc.parseObject(msg) as IParsedObject;;
     if (jsonRpcParsed.type === 'invalid') {
-        console.error('incoming message is not a valid JSON-RPC - message');
-        return;
+      console.error('incoming message is not a valid JSON-RPC - message');
+      return;
     }
-    if (jsonRpcParsed.type === 'success'){
+    if (jsonRpcParsed.type === 'success') {
       console.log('success:' + JSON.stringify(jsonRpcParsed, null, 4));
       return;
     }
     const requestObject = jsonRpcParsed.payload as RequestObject;
     const incomingMessage = requestObject.params as ICommunicationContainer;
+
+    // ACK
+    const successResponse = jsonrpc.success(requestObject.id, CommunicationMethod.PostAck) as SuccessObject;
+    this.webSocketService.send(successResponse);
 
     switch (incomingMessage.type) {
       case CommunicationType.AddUser:
@@ -81,7 +86,7 @@ export class SocketReceiveService {
         break;
       case CommunicationType.RemainingTileState:
         // this.remainingTileState(container);
-        console.error('unknown logic:'+ incomingMessage.type);
+        console.error('unknown logic:' + incomingMessage.type);
         break;
       case CommunicationType.GameWon:
         this.gameWon(incomingMessage);

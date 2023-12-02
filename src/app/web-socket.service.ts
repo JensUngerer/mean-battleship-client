@@ -6,6 +6,8 @@ import { webSocket } from 'rxjs/webSocket';
 import { Subject } from 'rxjs';
 import { SocketSendService } from './logic/communication/sendService/socket-send.service';
 import { SocketReceiveService } from './logic/communication/receiveService/socket-receive.service';
+import { ICommunicationContainer } from '../../../common/src/communication/message/iCommunicationContainer';
+import { RequestObject, SuccessObject } from 'jsonrpc-lite';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,10 @@ export class WebSocketService {
       {
         userId: userId
       }).toPromise();
+  }
+
+  public send(msg: SuccessObject | RequestObject) {
+    this.webSocketConnection.next(msg.serialize());
   }
 
   public init() {
