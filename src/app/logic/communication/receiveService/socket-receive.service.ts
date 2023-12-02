@@ -57,6 +57,10 @@ export class SocketReceiveService {
         console.error('incoming message is not a valid JSON-RPC - message');
         return;
     }
+    if (jsonRpcParsed.type === 'success'){
+      console.log('success:' + JSON.stringify(jsonRpcParsed, null, 4));
+      return;
+    }
     const requestObject = jsonRpcParsed.payload as RequestObject;
     const incomingMessage = requestObject.params as ICommunicationContainer;
 
