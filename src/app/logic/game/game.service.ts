@@ -1,25 +1,16 @@
-import { DisableBlindTilesService } from './../disableBlindTiles/disable-blind-tiles.service';
-import { SocketService } from './../communication/socketService/socket.service';
-import { Observable, Subject, BehaviorSubject, Subscriber, Subscription, defer } from 'rxjs';
-import { SocketSendService } from './../communication/sendService/socket-send.service';
-import { TileGeneratorService } from './../tileGenerator/tile-generator.service';
-import { Injectable, Inject } from '@angular/core';
-import { ShipGeneratorService } from '../ship-generator/ship-generator.service';
-import { Tile } from '../tile/tile';
-import { Ship } from '../ship/ship';
+import { Inject, Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { GameState } from '../../../../../common/src/gameState/game-state.enum';
 import { ITileCoordinates } from '../../../../../common/src/tileCoordinates/iTileCoordinates';
 import { TileState } from '../../../../../common/src/tileState/tileState.enum';
+import { ShipGeneratorService } from '../ship-generator/ship-generator.service';
+import { Ship } from '../ship/ship';
+import { Tile } from '../tile/tile';
 import { TilesHelperService } from '../tiles-helper/tiles-helper.service';
-import { GameState } from '../../../../../common/src/gameState/game-state.enum';
-import { IMessage } from '../../../../../common/src/communication/message/iMessage';
-import { SocketIoSendTypes } from '../../../../../common/src/communication/socketIoSendTypes';
-import { HttpClient } from '@angular/common/http';
-import { ConfigSocketIo } from '../../../../../common/src/config/configSocketIo';
-import { v4 } from 'uuid';
-import { webSocket } from 'rxjs/webSocket';
-import { WebSocketService } from 'src/app/web-socket.service';
-import { SocketReceiveService } from '../communication/receiveService/socket-receive.service';
-import { tap } from 'rxjs/internal/operators/tap';
+import { SocketSendService } from './../communication/sendService/socket-send.service';
+import { DisableBlindTilesService } from './../disableBlindTiles/disable-blind-tiles.service';
+import { TileGeneratorService } from './../tileGenerator/tile-generator.service';
 
 // https://stackoverflow.com/questions/55230263/angular-7-injected-service-is-undefined
 @Injectable({
