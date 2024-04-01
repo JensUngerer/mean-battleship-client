@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import  io from 'socket.io-client';
 import { ConfigSocketIo } from './../../../../../../common/src/config/configSocketIo';
 import { v4 } from 'uuid';
 import { IMessage } from './../../../../../../common/src/communication/message/iMessage';
@@ -8,7 +7,11 @@ import { Subject } from 'rxjs';
 import { fromEvent, asyncScheduler } from 'rxjs';
 import { throttle, delay, repeat, throttleTime, tap } from 'rxjs/operators';
 import { SocketIoReceiveTypes } from '../../../../../../common/src/communication/socketIoReceiveTypes';
+<<<<<<< HEAD
 import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
+=======
+import io from 'socket.io-client';
+>>>>>>> using-json-rpc-messages
 
 export class SocketIoSubscriptionMappingSender {
   private sendId: string;
@@ -59,7 +62,8 @@ export class SocketIoSubscriptionMappingReceiver {
 
 
   private onReceiveId(data: IMessage) {
-    // console.log('incoming:'+ JSON.stringify(data));
+    console.log(data);
+    console.log(JSON.stringify(data));
     this.receiver$.next(data);
   }
 
@@ -97,19 +101,28 @@ export class SocketIoSubscriptionMappingReceiver {
   providedIn: 'root'
 })
 export class SocketService implements OnDestroy {
+<<<<<<< HEAD
   public static userId: string;
   private webSocketSubject: WebSocketSubject<IMessage>;
   // private socket: any;
+=======
+  // public static userId: string;
+  private socket: any;
+>>>>>>> using-json-rpc-messages
   private receiveIdObservableMapping: { [key: string]: SocketIoSubscriptionMappingReceiver } = {};
   private sendIdObservableMapping: { [key: string]: SocketIoSubscriptionMappingSender } = {};
   private subscription: Subscription;
 
   constructor() {
     // this.socket = io((ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT)); // io.connect(ConfigSocketIo.SOCKET_IO_SERVER_URL + ConfigSocketIo.PORT);
+<<<<<<< HEAD
     const url = ConfigSocketIo.SOCKET_IO_SERVER_URL_WS + ":" + ConfigSocketIo.PORT;
     this.webSocketSubject =  webSocket(url);
     this.subscription = this.webSocketSubject.subscribe();
     SocketService.userId = v4();
+=======
+    // SocketService.userId = v4();
+>>>>>>> using-json-rpc-messages
   }
 
   ngOnDestroy(): void {
@@ -168,6 +181,7 @@ export class SocketService implements OnDestroy {
   //   // return throttledDataStream;
   // }
 
+<<<<<<< HEAD
   public registerReceive(receiveId: string): Observable<any> {
     const receiver = new SocketIoSubscriptionMappingReceiver(this.webSocketSubject);
     this.receiveIdObservableMapping[receiveId] = receiver;
@@ -182,4 +196,20 @@ export class SocketService implements OnDestroy {
     this.sendIdObservableMapping[sendId] = sender;
     return sender.onSend<T>(sendId);
   }
+=======
+  // public registerReceive(receiveId: string): Observable<any> {
+  //   const receiver = new SocketIoSubscriptionMappingReceiver(this.socket);
+  //   this.receiveIdObservableMapping[receiveId] = receiver;
+  //   return receiver.onReceive(receiveId);
+  // }
+
+  // public registerSend<T extends IMessage>(sendId: string) {
+  //   // sendData.subscribe((data: IMessage) => {
+  //   //   this.socket.emit(sendId, data);
+  //   // });
+  //   const sender = new SocketIoSubscriptionMappingSender(this.socket);
+  //   this.sendIdObservableMapping[sendId] = sender;
+  //   return sender.onSend<T>(sendId);
+  // }
+>>>>>>> using-json-rpc-messages
 }

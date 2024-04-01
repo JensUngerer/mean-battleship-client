@@ -1,0 +1,25 @@
+:host {
+    /* cf.: https://stackoverflow.com/questions/70300691/overlay-entire-page-except-one-element*/
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: gray;
+    opacity: 0.5;
+    z-index: 1;
+    display: flex;
+    flex: 1 1 100%;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.disabled-overlay {
+    display: flex;
+    flex: 1 1 100%;
+    align-items: center;
+    justify-content: center;
+    font-size: 10vw;
+    font-weight: 900;
+}

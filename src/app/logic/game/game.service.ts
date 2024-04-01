@@ -1,24 +1,23 @@
-import { DisableBlindTilesService } from './../disableBlindTiles/disable-blind-tiles.service';
-import { SocketService } from './../communication/socketService/socket.service';
-import { Observable, Subject, BehaviorSubject, Subscriber, Subscription } from 'rxjs';
-import { SocketSendService } from './../communication/sendService/socket-send.service';
-import { TileGeneratorService } from './../tileGenerator/tile-generator.service';
-import { Injectable, Inject } from '@angular/core';
-import { ShipGeneratorService } from '../ship-generator/ship-generator.service';
-import { Tile } from '../tile/tile';
-import { Ship } from '../ship/ship';
+import { Inject, Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { GameState } from '../../../../../common/src/gameState/game-state.enum';
 import { ITileCoordinates } from '../../../../../common/src/tileCoordinates/iTileCoordinates';
 import { TileState } from '../../../../../common/src/tileState/tileState.enum';
+import { ShipGeneratorService } from '../ship-generator/ship-generator.service';
+import { Ship } from '../ship/ship';
+import { Tile } from '../tile/tile';
 import { TilesHelperService } from '../tiles-helper/tiles-helper.service';
-import { GameState } from '../../../../../common/src/gameState/game-state.enum';
-import { IMessage } from '../../../../../common/src/communication/message/iMessage';
-import { SocketIoSendTypes } from '../../../../../common/src/communication/socketIoSendTypes';
+import { SocketSendService } from './../communication/sendService/socket-send.service';
+import { DisableBlindTilesService } from './../disableBlindTiles/disable-blind-tiles.service';
+import { TileGeneratorService } from './../tileGenerator/tile-generator.service';
 
 // https://stackoverflow.com/questions/55230263/angular-7-injected-service-is-undefined
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
+  private isUiBlocked$: BehaviorSubject<boolean>;
   private internalDomesticTiles$: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
   private internalAdversarialTiles$: BehaviorSubject<Tile[][]> = new BehaviorSubject<Tile[][]>([]);
   private internalShips$: BehaviorSubject<Ship[]> = new BehaviorSubject<Ship[]>([]);
@@ -32,12 +31,43 @@ export class GameService {
     private tileGeneratorService: TileGeneratorService,
     @Inject(ShipGeneratorService)
     private shipGeneratorService: ShipGeneratorService,
-    //  @Inject(TileTransitionService)
-    // private tileTransitionService: TileTransitionService,
     @Inject(SocketSendService)
     private socketSendService: SocketSendService,
     @Inject(DisableBlindTilesService)
-    private disableBlindTilesService) {
+    private disableBlindTilesService,
+  ) {
+  }
+
+  private disableUi(newGameState: GameState) {
+    // DEBUGGING:
+    // console.log('newGameState:'+ newGameState);
+    switch (newGameState) {
+      case GameState.Turn:
+        this.isUiBlocked$.next(false);
+        break;
+      case GameState.GameLost:
+        this.isUiBlocked$.next(true);
+        break;
+      case GameState.GameNotStarted:
+        this.isUiBlocked$.next(false);
+        break;
+      case GameState.GameWon:
+        this.isUiBlocked$.next(true);
+        break;
+      case GameState.InitializationError:
+        this.isUiBlocked$.next(false);
+        break;
+      case GameState.NotTurn:
+        this.isUiBlocked$.next(true);
+        break;
+      default:
+        break;
+    }
+  }
+
+  public setIsUiBlocked(isUiBlocked$: BehaviorSubject<boolean>) {
+    this.isUiBlocked$ = isUiBlocked$;
+    this.internalGameState$.pipe(tap(this.disableUi.bind(this))).subscribe();
   }
 
   public initialize(filedSize: number, shipSizes: number[]) {
@@ -67,6 +97,8 @@ export class GameService {
       this.disableBlindTilesService.disableBlindTiles(currentAdversarialTiles);
       this.internalAdversarialTiles$.next(currentAdversarialTiles);
 
+      // this.webocketService.init();
+
       this.socketSendService.startGame();
     } else {
       this.internalShips$.next([]);
@@ -77,6 +109,7 @@ export class GameService {
       // alert('initialization error - please, refresh browser-window (F5)');
     }
   }
+
 
   public setBeginningUser() {
     this.internalGameState$.next(GameState.Turn);
@@ -137,6 +170,10 @@ export class GameService {
     this.sendTileState(coordinates);
 
     // the incoming coordinates have just been processed -> so its now her / his turn
+    if (this.internalGameState$.value == GameState.GameLost) {
+      console.log('do not change state at it has already been lost');
+      return;
+    }
     this.internalGameState$.next(GameState.Turn);
   }
 
@@ -207,6 +244,11 @@ export class GameService {
         }
       }
     }
+  }
+
+  receiveGameLost() {
+    this.internalGameState$.next(GameState.GameLost);
+    this.internalGameState$.complete();
   }
 
 

@@ -1,21 +1,23 @@
-import { ShipGeneratorService } from 'src/app/logic/ship-generator/ship-generator.service';
-import { GameService } from './logic/game/game.service';
-import { SocketSendService } from './logic/communication/sendService/socket-send.service';
-import { SocketReceiveService } from './logic/communication/receiveService/socket-receive.service';
-import { TileGeneratorService } from './logic/tileGenerator/tile-generator.service';
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { ShipGeneratorService } from 'src/app/logic/ship-generator/ship-generator.service';
+import { SocketReceiveService } from './logic/communication/receiveService/socket-receive.service';
+import { SocketSendService } from './logic/communication/sendService/socket-send.service';
+import { GameService } from './logic/game/game.service';
+import { TileGeneratorService } from './logic/tileGenerator/tile-generator.service';
 
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { GameComponent } from './view/game/game.component';
-import { FieldComponent } from './view/field/field.component';
-import { GameStartComponent } from './view/game-start/game-start.component';
-import { LegendTileComponent } from './view/legend-tile/legend-tile.component';
-import { LegendTileCornerComponent } from './view/legend-tile-corner/legend-tile-corner.component';
-import { TileComponent } from './view/tile/tile.component';
+import { BlockingUiLayerComponent } from './blocking-ui-layer/blocking-ui-layer.component';
 import { SocketService } from './logic/communication/socketService/socket.service';
 import { CurrentGameStateComponent } from './view/current-game-state/current-game-state.component';
+import { FieldComponent } from './view/field/field.component';
+import { GameStartComponent } from './view/game-start/game-start.component';
+import { GameComponent } from './view/game/game.component';
+import { LegendTileCornerComponent } from './view/legend-tile-corner/legend-tile-corner.component';
+import { LegendTileComponent } from './view/legend-tile/legend-tile.component';
+import { TileComponent } from './view/tile/tile.component';
 
 @NgModule({
   declarations: [
@@ -26,11 +28,13 @@ import { CurrentGameStateComponent } from './view/current-game-state/current-gam
     LegendTileComponent,
     LegendTileCornerComponent,
     TileComponent,
-    CurrentGameStateComponent
+    CurrentGameStateComponent,
+    BlockingUiLayerComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
   providers: [
     TileGeneratorService,
